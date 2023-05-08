@@ -139,10 +139,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-      
-      - name: version
-        run: echo "${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
-        id: version
         
       - name: Get Changelog File
         run: echo "CHANGELOG=$(ls -a ./res/patchNotes/ | grep -i .*-patchnotes-${GITHUB_REF#*/v}\.html)" >> $GITHUB_OUTPUT
