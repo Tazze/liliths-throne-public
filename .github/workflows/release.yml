@@ -155,7 +155,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          body_path: ./res/patchNotes/${{ steps.get_changelog.CHANGELOG }}
+          body_path: ./res/patchNotes/${{ steps.get_changelog.outputs.CHANGELOG }}
           token: ${{ github.token }}
           files: |
             ./staging/Lilith's Throne (linux)/Lilith's Throne (linux).zip
