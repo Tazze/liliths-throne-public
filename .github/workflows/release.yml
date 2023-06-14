@@ -20,7 +20,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B clean package --file pom.xml -Dtarget.platform=linux-aarch64 -Dexclude.platform=linux
+      run: mvn -B clean package --file pom.xml -Plinux-aarch64
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (linux-aarch64).zip" "Lilith's Throne (linux-aarch64)/" && cd ..
     - uses: actions/upload-artifact@v3
       with:
@@ -41,7 +41,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B clean package --file pom.xml -Dtarget.platform=linux
+      run: mvn -B clean package --file pom.xml -Plinux
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (linux).zip" "Lilith's Throne (linux)/" && cd ..
     - uses: actions/upload-artifact@v3
       with:
@@ -62,7 +62,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B clean package --file pom.xml -Dtarget.platform=mac-aarch64 -Dexclude.platform=linux
+      run: mvn -B clean package --file pom.xml -Pmac-aarch64
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (mac-aarch64).zip" "Lilith's Throne (mac-aarch64)/" && cd ..
     - uses: actions/upload-artifact@v3
       with:
@@ -83,7 +83,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B clean package --file pom.xml -Dtarget.platform=mac -Dexclude.platform=linux
+      run: mvn -B clean package --file pom.xml -Pmac
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (mac).zip" "Lilith's Throne (mac)/" && cd ..
     - uses: actions/upload-artifact@v3
       with:
@@ -104,7 +104,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn clean -B package --file pom.xml -Dtarget.platform=win-x86 -Dexclude.platform=linux
+      run: mvn clean -B package --file pom.xml -Pwin-x86
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (win-x86).zip" "Lilith's Throne (win-x86)/" && cd ..
     - uses: actions/upload-artifact@v3
       with:
@@ -125,7 +125,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B clean package --file pom.xml -Dtarget.platform=win -Dexclude.platform=linux
+      run: mvn -B clean package --file pom.xml -Pwin
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (win).zip" "Lilith's Throne (win)/" && cd ..
     - uses: actions/upload-artifact@v3
       with:
