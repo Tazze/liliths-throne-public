@@ -66,7 +66,7 @@
 		</profile>
 		
 		<profile>
-			<id>win32</id>
+			<id>win-x86</id>
 			<activation>
 				<os>
 					<family>windows</family>
@@ -164,7 +164,7 @@
 		</profile>
 
 		<profile>
-			<id>linux-arm64</id>
+			<id>linux-aarch64</id>
 			<activation>
 				<os>
 					<name>linux</name>

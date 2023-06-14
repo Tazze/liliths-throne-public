@@ -31,7 +31,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Compile with Maven
-      run: mvn -B clean compile --file pom.xml -Plinux-arm64
+      run: mvn -B clean compile --file pom.xml -Plinux-aarch64
   
   linux:
     name: Compile for Linux (amd64)
@@ -95,7 +95,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Compile with Maven
-      run: mvn -B clean compile --file pom.xml -Pwin32
+      run: mvn -B clean compile --file pom.xml -Pwin-x86
   
   win:
     name: Compile for Windows (amd64)
