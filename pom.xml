@@ -8,7 +8,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>17</maven.compiler.release>
-		<javafx.version>18.0.2</javafx.version>
+		<javafx.version>17.0.7</javafx.version>
 		<nashorn.version>15.4</nashorn.version>
 		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
 		<maven-shade-plugin.version>3.3.0</maven-shade-plugin.version>
@@ -17,28 +17,286 @@
 
 	<profiles>
 		<profile>
-			<id>profile-windows</id>
+			<id>win</id>
 			<activation>
 				<os>
-					<family>Windows</family>
+					<family>windows</family>
+					<arch>amd64</arch>
 				</os>
 			</activation>
 			<properties>
 				<target.platform>win</target.platform>
-				<exclude.platform>linux</exclude.platform>
 			</properties>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>${maven-shade-plugin.version}</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<shadedArtifactAttached>true</shadedArtifactAttached>
+								<shadedClassifierName>project-classifier</shadedClassifierName>
+								<outputFile>${project.build.directory}/${project.name} (${target.platform})/${project.name}-${project.version}.jar</outputFile>
+								<transformers>
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										<mainClass>com.lilithsthrone.Launcher</mainClass>
+									</transformer>
+								</transformers>
+								<artifactSet>
+									<excludes>
+									<exclude>org.openjfx:*:win-x86</exclude>
+									<exclude>org.openjfx:*:linux</exclude>
+									<exclude>org.openjfx:*:linux-aarch64</exclude>
+									<exclude>org.openjfx:*:mac</exclude>
+									<exclude>org.openjfx:*:mac-aarch64</exclude>
+									</excludes>
+								</artifactSet>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
 		</profile>
+		
 		<profile>
-			<id>profile-linux</id>
+			<id>win32</id>
 			<activation>
 				<os>
-					<family>Linux</family>
+					<family>windows</family>
+					<arch>x86</arch>
+				</os>
+			</activation>
+			<properties>
+				<target.platform>win-x86</target.platform>
+			</properties>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>${maven-shade-plugin.version}</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<shadedArtifactAttached>true</shadedArtifactAttached>
+								<shadedClassifierName>project-classifier</shadedClassifierName>
+								<outputFile>${project.build.directory}/${project.name} (${target.platform})/${project.name}-${project.version}.jar</outputFile>
+								<transformers>
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										<mainClass>com.lilithsthrone.Launcher</mainClass>
+									</transformer>
+								</transformers>
+								<artifactSet>
+									<excludes>
+									<exclude>org.openjfx:*:win</exclude>
+									<exclude>org.openjfx:*:linux</exclude>
+									<exclude>org.openjfx:*:linux-aarch64</exclude>
+									<exclude>org.openjfx:*:mac</exclude>
+									<exclude>org.openjfx:*:mac-aarch64</exclude>
+									</excludes>
+								</artifactSet>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</profile>
+		
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<name>linux</name>
+					<arch>amd64</arch>
 				</os>
 			</activation>
 			<properties>
 				<target.platform>linux</target.platform>
-				<exclude.platform>win</exclude.platform>
 			</properties>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>${maven-shade-plugin.version}</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<shadedArtifactAttached>true</shadedArtifactAttached>
+								<shadedClassifierName>project-classifier</shadedClassifierName>
+								<outputFile>${project.build.directory}/${project.name} (${target.platform})/${project.name}-${project.version}.jar</outputFile>
+								<transformers>
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										<mainClass>com.lilithsthrone.Launcher</mainClass>
+									</transformer>
+								</transformers>
+								<artifactSet>
+									<excludes>
+									<exclude>org.openjfx:*:win-x86</exclude>
+									<exclude>org.openjfx:*:win</exclude>
+									<exclude>org.openjfx:*:mac</exclude>
+									<exclude>org.openjfx:*:mac-aarch64</exclude>
+									<exclude>org.openjfx:*:linux-aarch64</exclude>
+									</excludes>
+								</artifactSet>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</profile>
+
+		<profile>
+			<id>linux-arm64</id>
+			<activation>
+				<os>
+					<name>linux</name>
+					<arch>aarch64</arch>
+				</os>
+			</activation>
+			<properties>
+				<target.platform>linux-aarch64</target.platform>
+			</properties>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>${maven-shade-plugin.version}</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<shadedArtifactAttached>true</shadedArtifactAttached>
+								<shadedClassifierName>project-classifier</shadedClassifierName>
+								<outputFile>${project.build.directory}/${project.name} (${target.platform})/${project.name}-${project.version}.jar</outputFile>
+								<transformers>
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										<mainClass>com.lilithsthrone.Launcher</mainClass>
+									</transformer>
+								</transformers>
+								<artifactSet>
+									<excludes>
+									<exclude>org.openjfx:*:win-x86</exclude>
+									<exclude>org.openjfx:*:win</exclude>
+									<exclude>org.openjfx:*:mac</exclude>
+									<exclude>org.openjfx:*:mac-aarch64</exclude>
+									<exclude>org.openjfx:*:linux</exclude>
+									</excludes>
+								</artifactSet>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</profile>
+		
+		<profile>
+			<id>mac</id>
+			<activation>
+				<os>
+					<name>mac os x</name>
+					<arch>amd64</arch>
+				</os>
+			</activation>
+			<properties>
+				<target.platform>mac</target.platform>
+			</properties>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>${maven-shade-plugin.version}</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<shadedArtifactAttached>true</shadedArtifactAttached>
+								<shadedClassifierName>project-classifier</shadedClassifierName>
+								<outputFile>${project.build.directory}/${project.name} (${target.platform})/${project.name}-${project.version}.jar</outputFile>
+								<transformers>
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										<mainClass>com.lilithsthrone.Launcher</mainClass>
+									</transformer>
+								</transformers>
+								<artifactSet>
+									<excludes>
+									<exclude>org.openjfx:*:win-x86</exclude>
+									<exclude>org.openjfx:*:win</exclude>
+									<exclude>org.openjfx:*:linux</exclude>
+									<exclude>org.openjfx:*:linux-aarch64</exclude>
+									<exclude>org.openjfx:*:mac-aarch64</exclude>
+									</excludes>
+								</artifactSet>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</profile>
+		
+		<profile>
+			<id>mac-aarch64</id>
+			<activation>
+				<os>
+					<name>mac os x</name>
+					<arch>aarch64</arch>
+				</os>
+			</activation>
+			<properties>
+				<target.platform>mac-aarch64</target.platform>
+			</properties>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>${maven-shade-plugin.version}</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>shade</goal>
+							</goals>
+							<configuration>
+								<shadedArtifactAttached>true</shadedArtifactAttached>
+								<shadedClassifierName>project-classifier</shadedClassifierName>
+								<outputFile>${project.build.directory}/${project.name} (${target.platform})/${project.name}-${project.version}.jar</outputFile>
+								<transformers>
+									<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+										<mainClass>com.lilithsthrone.Launcher</mainClass>
+									</transformer>
+								</transformers>
+								<artifactSet>
+									<excludes>
+									<exclude>org.openjfx:*:win-x86</exclude>
+									<exclude>org.openjfx:*:win</exclude>
+									<exclude>org.openjfx:*:linux</exclude>
+									<exclude>org.openjfx:*:linux-arm32</exclude>
+									<exclude>org.openjfx:*:linux-aarch64</exclude>
+									<exclude>org.openjfx:*:mac</exclude>
+									</excludes>
+								</artifactSet>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
 		</profile>
 	</profiles>
 
@@ -115,34 +373,6 @@
 				<configuration>
 					<mainClass>com.lilithsthrone.main.Main</mainClass>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>${maven-shade-plugin.version}</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<shadedArtifactAttached>true</shadedArtifactAttached>
-							<shadedClassifierName>project-classifier</shadedClassifierName>
-							<outputFile>${project.build.directory}/${project.name} (${target.platform})/${project.name}-${project.version}.jar</outputFile>
-							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>com.lilithsthrone.Launcher</mainClass>
-								</transformer>
-							</transformers>
-							<artifactSet>
-								<excludes>
-								  <exclude>org.openjfx:*:${exclude.platform}</exclude>
-								</excludes>
-							  </artifactSet>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -31,7 +31,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Compile with Maven
-      run: mvn -B clean compile --file pom.xml -Dtarget.platform=linux-aarch64
+      run: mvn -B clean compile --file pom.xml -Plinux-arm64
   
   linux:
     name: Compile for Linux (amd64)
@@ -47,7 +47,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Compile with Maven
-      run: mvn -B clean compile --file pom.xml -Dtarget.platform=linux
+      run: mvn -B clean compile --file pom.xml -Plinux
 
   mac_aarch64:
     name: Compile for Mac (aarch64)
@@ -63,7 +63,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Compile with Maven
-      run: mvn -B clean compile --file pom.xml -Dtarget.platform=mac-aarch64
+      run: mvn -B clean compile --file pom.xml -Pmac-aarch64
 
   mac:
     name: Compile for Mac (amd64)
@@ -79,7 +79,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Compile with Maven
-      run: mvn -B clean compile --file pom.xml -Dtarget.platform=mac
+      run: mvn -B clean compile --file pom.xml -Pmac
 
   win_x86:
     name: Compile for Windows (x86)
@@ -95,7 +95,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Compile with Maven
-      run: mvn -B clean compile --file pom.xml -Dtarget.platform=win-x86
+      run: mvn -B clean compile --file pom.xml -Pwin32
   
   win:
     name: Compile for Windows (amd64)
@@ -111,4 +111,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Compile with Maven
-      run: mvn -B clean compile --file pom.xml -Dtarget.platform=win
+      run: mvn -B clean compile --file pom.xml -Pwin
