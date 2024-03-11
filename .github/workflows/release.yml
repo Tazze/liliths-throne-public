@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -22,7 +22,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean package --file pom.xml -P 'linux-aarch64, !win, !win-x86, !linux, !mac, !mac-aarch64'
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (linux-aarch64).zip" "Lilith's Throne (linux-aarch64)/" && cd ..
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Lilith's Throne (linux-aarch64)
         path: 'staging'
@@ -33,9 +33,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -43,7 +43,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean package --file pom.xml -P 'linux, !win, !win-x86, !linux-aarch64, !mac, !mac-aarch64'
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (linux).zip" "Lilith's Throne (linux)/" && cd ..
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Lilith's Throne (linux)
         path: 'staging'
@@ -54,9 +54,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -64,7 +64,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean package --file pom.xml -P 'mac-aarch64, !win, !win-x86, !linux, !linux-aarch64, !mac'
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (mac-aarch64).zip" "Lilith's Throne (mac-aarch64)/" && cd ..
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Lilith's Throne (mac-aarch64)
         path: 'staging'
@@ -75,9 +75,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -85,7 +85,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean package --file pom.xml -P 'mac, !win, !win-x86, !linux, !linux-aarch64, !mac-aarch64'
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (mac).zip" "Lilith's Throne (mac)/" && cd ..
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Lilith's Throne (mac)
         path: 'staging'
@@ -96,9 +96,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -106,7 +106,7 @@ jobs:
     - name: Build with Maven
       run: mvn clean -B package --file pom.xml -P 'win-x86, !win, !linux, !linux-aarch64, !mac, !mac-aarch64'
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (win-x86).zip" "Lilith's Throne (win-x86)/" && cd ..
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Lilith's Throne (win-x86)
         path: 'staging'
@@ -117,9 +117,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -127,7 +127,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean package --file pom.xml -P 'win, !win-x86, !linux, !linux-aarch64, !mac, !mac-aarch64'
     - run: mkdir staging && cd target && zip -r "../staging/Lilith's Throne (win).zip" "Lilith's Throne (win)/" && cd ..
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Lilith's Throne (win)
         path: 'staging'
@@ -138,7 +138,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Get Changelog File
         run: echo "CHANGELOG=$(ls -a ./res/patchNotes/ | grep -i .*-patchnotes-${GITHUB_REF#*/v}\.html)" >> $GITHUB_OUTPUT
@@ -147,12 +147,12 @@ jobs:
       - run: mkdir staging
 
       - name: donwload generated artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: ./staging
       
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           body_path: ./res/patchNotes/${{ steps.get_changelog.outputs.CHANGELOG }}
