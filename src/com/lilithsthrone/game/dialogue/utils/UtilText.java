@@ -196,6 +196,8 @@ import com.lilithsthrone.game.inventory.outfit.AbstractOutfit;
 import com.lilithsthrone.game.inventory.outfit.OutfitType;
 import com.lilithsthrone.game.inventory.weapon.AbstractWeaponType;
 import com.lilithsthrone.game.inventory.weapon.WeaponType;
+import com.lilithsthrone.game.occupantManagement.slave.SlaveJob;
+import com.lilithsthrone.game.occupantManagement.slave.SlaveJobSetting;
 import com.lilithsthrone.game.occupantManagement.slave.SlavePermission;
 import com.lilithsthrone.game.occupantManagement.slave.SlavePermissionSetting;
 import com.lilithsthrone.game.settings.ForcedFetishTendency;
@@ -594,7 +596,15 @@ public class UtilText {
 		return parseNPCSpeech(text, femininity, false, false);
 	}
 
+	public static String parseNPCSpeechDoll(String text, Femininity femininity) {
+		return parseNPCSpeech(text, femininity, false, false, true);
+	}
+	
 	public static String parseNPCSpeech(String text, Femininity femininity, boolean bimbo, boolean stutter) {
+		return parseNPCSpeech(text, femininity, bimbo, stutter, false);
+	}
+	
+	public static String parseNPCSpeech(String text, Femininity femininity, boolean bimbo, boolean stutter, boolean doll) {
 		modifiedSentence = text;
 		if (bimbo) {
 			modifiedSentence = Util.addBimbo(modifiedSentence, 6);
@@ -602,7 +612,7 @@ public class UtilText {
 		if (stutter) {
 			modifiedSentence = Util.addStutter(modifiedSentence, 4);
 		}
-		return "<span class='speech' style='color:" + femininity.getSpeechColour().toWebHexString() + ";'>" + modifiedSentence + "</span>";
+		return "<span class='speech"+(doll?" doll":"")+"' style='color:" + femininity.getSpeechColour().toWebHexString() + ";'>" + modifiedSentence + "</span>";
 	}
 	
 	public static String getDisabledResponse(String label) {
@@ -785,6 +795,13 @@ public class UtilText {
 		return "AEIOUaeiou".indexOf(c) != -1;
 	}
 
+	/**
+	 * @return The word, with an appropriate determiner (either 'a' or 'an' ) added in front of it.
+	 */
+	public static String addDeterminer(String word) {
+		return generateSingularDeterminer(word)+" "+word;
+	}
+	
 	/**
 	 * @return 'a' or 'an'
 	 */
@@ -3477,6 +3494,104 @@ public class UtilText {
 					return parseNPCSpeech(arguments, Femininity.FEMININE_STRONG);
 				} else {
 					return parseNPCSpeech("...", Femininity.FEMININE_STRONG);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechMasculineDoll",
+						"masculineSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, masculine character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.MASCULINE);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.MASCULINE);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechMasculineStrongDoll",
+						"speechMasculineHeavyDoll",
+						"speechMasculinePlusDoll",
+						"masculineStrongSpeechDoll",
+						"masculineHeavySpeechDoll",
+						"masculinePlusSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, very masculine character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.MASCULINE_STRONG);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.MASCULINE_STRONG);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechAndrogynousDoll",
+						"androgynousSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, androgynous character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.ANDROGYNOUS);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.ANDROGYNOUS);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechFeminineDoll",
+						"feminineSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, feminine character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.FEMININE);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.FEMININE);
+				}
+			}
+		});
+		
+		commandsList.add(new ParserCommand(
+				Util.newArrayListOfValues(
+						"speechFeminineStrongDoll",
+						"speechFeminineHeavyDoll",
+						"speechFemininePlusDoll",
+						"feminineStrongSpeechDoll",
+						"feminineHeavySpeechDoll",
+						"femininePlusSpeechDoll"),
+				false,
+				false,
+				"(speech content)",
+				"Parses the containing dialogue as though a generic, very feminine character is saying it."){
+			@Override
+			public String parse(List<GameCharacter> specialNPCs, String command, String arguments, String target, GameCharacter character) {
+				if(arguments!=null) {
+					return parseNPCSpeechDoll(arguments, Femininity.FEMININE_STRONG);
+				} else {
+					return parseNPCSpeechDoll("...", Femininity.FEMININE_STRONG);
 				}
 			}
 		});
@@ -10085,6 +10200,12 @@ public class UtilText {
 		}
 		for(InventoryInteraction interaction : InventoryInteraction.values()) {
 			engine.put("INVENTORY_INTERACTION_"+interaction.toString(), interaction);
+		}
+		for(SlaveJob job : SlaveJob.values()) {
+			engine.put("SLAVE_JOB_"+job.toString(), job);
+		}
+		for(SlaveJobSetting jobSetting : SlaveJobSetting.values()) {
+			engine.put("SLAVE_JOB_SETTING_"+jobSetting.toString(), jobSetting);
 		}
 		
 		
