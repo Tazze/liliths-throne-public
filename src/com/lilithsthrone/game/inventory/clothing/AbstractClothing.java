@@ -1528,7 +1528,7 @@ public abstract class AbstractClothing extends AbstractCoreItem implements XMLSa
 	 * null should be passed as the argument for 'slotToBeEquippedTo' in order to return non-slot-specific descriptions.
 	 * 
 	 * @param equippedToCharacter The character this clothing is equipped to.
-	 * @param slotToBeEquippedTo The slot for which this clothing's effects effects are to be described.
+	 * @param slotToBeEquippedTo The slot for which this clothing's effects are to be described.
 	 * @param verbose true if you want a lengthy description of each effect.
 	 * @return A List of Strings describing extra features of this ClothingType.
 	 */
@@ -1551,6 +1551,25 @@ public abstract class AbstractClothing extends AbstractCoreItem implements XMLSa
 				} else {
 					descriptionsList.add("[style.boldDirty(Dirty)]");
 				}
+			}
+		}
+		
+		if(slotToBeEquippedTo!=null && dirty && Main.game.isInSex()) {
+			Map<GameCharacter, Integer> cummedOnInfo = new HashMap<>();
+			for(Entry<GameCharacter, Map<InventorySlot, Integer>> entry : Main.sex.getAmountCummedOnByPartners(equippedToCharacter).entrySet()) {
+				for(Entry<InventorySlot, Integer> areas : entry.getValue().entrySet()) {
+					if(areas.getKey()==slotToBeEquippedTo) {
+						cummedOnInfo.put(entry.getKey(), areas.getValue());
+					}
+				}
+			}
+			if(!cummedOnInfo.isEmpty()) {
+				descriptionsList.add("[style.boldDirty(Fluids present:)]");
+				for(Entry<GameCharacter, Integer> entry : cummedOnInfo.entrySet()) {
+					descriptionsList.add(UtilText.parse(entry.getKey(), "[style.fluid("+entry.getValue()+")] of <span style='color:"+entry.getKey().getFemininity().getColour().toWebHexString()+";'>[npc.namePos]</span> [npc.cum+]!"));
+				}
+			} else {
+				descriptionsList.add("[style.italicsDisabled(No fluid is available...)]");
 			}
 		}
 

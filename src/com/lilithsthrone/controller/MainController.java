@@ -277,7 +277,7 @@ public class MainController implements Initializable {
 	}
 
 	public boolean isPhoneDisabled() {
-		return !Main.game.isStarted() || !Main.game.isInNewWorld();
+		return !Main.game.isStarted() || !Main.game.isInNewWorld() || Main.game.getCurrentDialogueNode().isPhoneDisabled();
 	}
 	
 	public void openPhone() {
@@ -311,6 +311,10 @@ public class MainController implements Initializable {
 		if(!Main.game.isInNewWorld() && !Main.game.isInSex()) {
 			return true;
 		}
+		if(Main.game.isInSex() && Main.game.getCurrentDialogueNode().isInventoryForcedDisabledInSex()) {
+			return true;
+		}
+		
 		if (Main.game.getCurrentDialogueNode().getDialogueNodeType() == DialogueNodeType.INVENTORY
 				|| Main.game.isInCombat()
 				/*|| Main.game.isInSex()*/) {
@@ -600,7 +604,7 @@ public class MainController implements Initializable {
 //								if(npc.isUnique() && !npc.hasArtwork()
 ////										&& (npc.getWorldLocation().getWorldRegion()==WorldRegion.DOMINION)
 ////										&& npc.isFeminine()
-//										&& npc.getFaceType().getBodyCoveringType(npc).getCategory()!=BodyCoveringCategory.MAIN_SKIN
+//										&& npc.getFaceType().getBodyCoveringType(npc).getCategory()==BodyCoveringCategory.MAIN_SKIN
 ////										&& npc.isAbleToBeImpregnated()
 ////										&& npc.isFeminine()
 ////										&& (npc.getClass().getName().contains("dominion.") || npc.getClass().getName().contains("submission."))

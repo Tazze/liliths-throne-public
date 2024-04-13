@@ -2951,6 +2951,12 @@ public class OptionsDialogue {
 					"Toggles whether or not characters with a reptilian or amphibious head type will spawn with human-like hair on their heads.",
 					Main.getProperties().hasValue(PropertyValue.scalyHairContent)));
 			
+			UtilText.nodeContentSB.append(getContentPreferenceDiv("LIP_LISP",
+					PresetColour.BASE_GREEN_DARK,
+					"Lip lisps",
+					"Toggles whether or not characters with very large lips will speak with a lisp.",
+					Main.getProperties().hasValue(PropertyValue.lipLispContent)));
+			
 			UtilText.nodeContentSB.append(getBreastsContentPreferenceVariableDiv(
 					"PREGNANCY_BREAST_GROWTH",
 					PresetColour.BASE_PINK,

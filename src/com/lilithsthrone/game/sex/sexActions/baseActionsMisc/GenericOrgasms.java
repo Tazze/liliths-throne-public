@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.lilithsthrone.game.PropertyValue;
 import com.lilithsthrone.game.character.GameCharacter;
+import com.lilithsthrone.game.character.attributes.Attribute;
 import com.lilithsthrone.game.character.attributes.CorruptionLevel;
 import com.lilithsthrone.game.character.body.Arm;
 import com.lilithsthrone.game.character.body.BodyPartInterface;
@@ -1327,7 +1328,7 @@ public class GenericOrgasms {
 //		}
 		
 		
-		if(cumTarget==OrgasmCumTarget.INSIDE || (cumTarget==OrgasmCumTarget.INSIDE_SWITCH_DOUBLE && isSecondaryCreampieTarget)
+		if((cumTarget==OrgasmCumTarget.INSIDE || (cumTarget==OrgasmCumTarget.INSIDE_SWITCH_DOUBLE && isSecondaryCreampieTarget))
 				&& characterTargeted!=null
 				&& contactingArea.isOrifice()
 				&& ((SexAreaOrifice)contactingArea).isInternalOrifice()
@@ -1340,8 +1341,9 @@ public class GenericOrgasms {
 					&& !characterTargeted.isPregnant()
 					&& characterTargeted.isAbleToBeImpregnated()
 					&& characterOrgasming.isImpregnationPhysicallyPossible()
+					&& characterOrgasming.isVirile(Attribute.VIRILITY)
 					&& characterTargeted.isImpregnationPhysicallyPossible()
-					&& !characterOrgasming.getFetishDesire(Fetish.FETISH_IMPREGNATION).isNegative()
+					&& characterTargeted.isFertile()
 					&& !immobile) {
 				if(immobileTarget) {
 					if(sleepingTarget) {
@@ -1356,7 +1358,7 @@ public class GenericOrgasms {
 						genericOrgasmSB.append("<br/>[npc2.Name] [npc2.moansVerb+] as [npc2.she] [npc2.verb(feel)] [npc.namePos] [npc.cum+] shooting deep inside [npc2.her] womb");
 					}
 				}
-				if(!characterOrgasming.isMute()) {
+				if(!characterOrgasming.isMute() && characterOrgasming.getFetishDesire(Fetish.FETISH_IMPREGNATION).isPositive()) {
 					if(immobileTarget) {
 						genericOrgasmSB.append(", and [npc2.verb(stay)] silent as [npc.name] ");
 					} else {
@@ -1900,7 +1902,7 @@ public class GenericOrgasms {
 							sb.append(" [npc.Name] [npc.verb(remain)] silent and unmoving as [npc.her] [npc.cum+] splatters onto [npc.herHim], and doesn't react at all as it begins to run down over [npc.her] [npc.skin].");
 						}
 					} else {
-						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] feels it running down over [npc.her] [npc.skin].");
+						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] [npc.verb(feel)] it running down over [npc.her] [npc.skin].");
 					}
 					return UtilText.parse(characterOrgasming, sb.toString());
 				}
@@ -1919,7 +1921,7 @@ public class GenericOrgasms {
 							sb.append(" [npc.Name] [npc.verb(remain)] silent and unmoving as [npc.her] [npc.cum+] splatters onto [npc.herHim], and doesn't react at all as it begins to run down over [npc.her] [npc.skin].");
 						}
 					} else {
-						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] feels it running down over [npc.her] [npc.skin].");
+						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] [npc.verb(feel)] it running down over [npc.her] [npc.skin].");
 					}
 					return UtilText.parse(characterOrgasming, sb.toString());
 				}
@@ -1938,7 +1940,7 @@ public class GenericOrgasms {
 							sb.append(" [npc.Name] [npc.verb(remain)] silent and unmoving as [npc.her] [npc.cum+] splatters onto [npc.herHim], and doesn't react at all as it begins to run down over [npc.her] [npc.skin].");
 						}
 					} else {
-						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] feels it running down over [npc.her] [npc.skin].");
+						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] [npc.verb(feel)] it running down over [npc.her] [npc.skin].");
 					}
 					return UtilText.parse(characterOrgasming, sb.toString());
 				}
@@ -1957,7 +1959,7 @@ public class GenericOrgasms {
 							sb.append(" [npc.Name] [npc.verb(remain)] silent and unmoving as [npc.her] [npc.cum+] splatters onto [npc.herHim], and doesn't react at all as it begins to run down over [npc.her] [npc.toes+].");
 						}
 					} else {
-						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] feels it running down over [npc.her] [npc.toes+].");
+						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] [npc.verb(feel)] it running down over [npc.her] [npc.toes+].");
 					}
 					return UtilText.parse(characterOrgasming, sb.toString());
 				}
@@ -1976,7 +1978,7 @@ public class GenericOrgasms {
 							sb.append(" [npc.Name] [npc.verb(remain)] silent and unmoving as [npc.her] [npc.cum+] splatters onto [npc.herHim], and doesn't react at all as it begins to run down over [npc.her] [npc.breastsSkin+].");
 						}
 					} else {
-						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] feels it running down over [npc.her] [npc.breastsSkin+].");
+						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] [npc.verb(feel)] it running down over [npc.her] [npc.breastsSkin+].");
 					}
 					return UtilText.parse(characterOrgasming, sb.toString());
 				}
@@ -1994,7 +1996,7 @@ public class GenericOrgasms {
 							sb.append(" [npc.Name] [npc.verb(remain)] silent and unmoving as [npc.her] [npc.cum+] splatters onto [npc.herHim], and doesn't react at all as it begins to run down over [npc.her] [npc.faceSkin+].");
 						}
 					} else {
-						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] feels it running down over [npc.her] [npc.faceSkin+].");
+						sb.append(" [npc.Name] [npc.verb(grin)] as [npc.her] [npc.cum+] splatters onto [npc.herHim], and [npc.she] can't help but let out [npc.a_moan] as [npc.she] [npc.verb(feel)] it running down over [npc.her] [npc.faceSkin+].");
 					}
 					return UtilText.parse(characterOrgasming, sb.toString());
 				}
