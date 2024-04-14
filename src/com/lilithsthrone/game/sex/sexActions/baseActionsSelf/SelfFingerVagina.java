@@ -48,7 +48,9 @@ public class SelfFingerVagina {
 		}
 		@Override
 		public boolean isBaseRequirementsMet() {
-			return Main.sex.getTotalAmountCummedOn(Main.sex.getCharacterPerformingAction())>0;
+			return Main.sex.getTotalAmountCummedOn(Main.sex.getCharacterPerformingAction())>0
+					&& (Main.sex.getCharacterPerformingAction().isPlayer()
+							|| (!Main.sex.getCharacterPerformingAction().getFetishDesire(Fetish.FETISH_PREGNANCY).isNegative() && !Main.sex.getCharacterPerformingAction().getFetishDesire(Fetish.FETISH_CUM_ADDICT).isNegative()));
 		}
 		private String getRandomCharacterCumDescription(boolean withName) {
 			Set<GameCharacter> charactersCummedOnPerformer = Main.sex.getAmountCummedOnByPartners(Main.sex.getCharacterPerformingAction()).keySet();
@@ -111,7 +113,9 @@ public class SelfFingerVagina {
 		}
 		@Override
 		public boolean isBaseRequirementsMet() {
-			return Main.sex.getTotalAmountCummedOn(Main.sex.getCharacterPerformingAction())>0;
+			return Main.sex.getTotalAmountCummedOn(Main.sex.getCharacterPerformingAction())>0
+					&& (Main.sex.getCharacterPerformingAction().isPlayer()
+							|| (!Main.sex.getCharacterPerformingAction().getFetishDesire(Fetish.FETISH_PREGNANCY).isNegative() && !Main.sex.getCharacterPerformingAction().getFetishDesire(Fetish.FETISH_CUM_ADDICT).isNegative()));
 		}
 		private String getRandomCharacterCumDescription(boolean withName) {
 			Set<GameCharacter> charactersCummedOnPerformer = Main.sex.getAmountCummedOnByPartners(Main.sex.getCharacterPerformingAction()).keySet();

@@ -105,8 +105,10 @@
 			No clothing is to be provided,
 		#ELSEIF([#SPECIAL_PARSE_4]==1)
 			Your doll will be delivered in rainbow gloves and stockings,
-		#ELSE
+		#ELSEIF([#SPECIAL_PARSE_4]==2)
 			Your doll will be delivered in cat-style lingerie,
+		#ELSE
+			Your doll will be delivered in a maid uniform,
 		#ENDIF
 		#IF([#SPECIAL_PARSE_5])
 			 and she'll come equipped with a selection of toys.

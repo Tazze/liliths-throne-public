@@ -2404,6 +2404,9 @@ public class ItemEffectType {
 			} else if(primaryModifier == TFModifier.TF_MOD_FETISH_BODY_PART) {
 				return TFModifier.getTFBodyPartFetishList();
 				
+			} else if(primaryModifier == TFModifier.CLOTHING_CREAMPIE_RETENTION) {
+				return TFModifier.getClothingCreampieRetentionList();
+				
 			} else {
 				return getClothingTFSecondaryModifiers(primaryModifier);
 			}
@@ -2456,6 +2459,38 @@ public class ItemEffectType {
 				} else if(potency==TFPotency.MINOR_DRAIN) {
 					effectsList.add("[style.boldMinorBad(Slightly decreases)] [style.boldLust(desire)] for [style.boldFetish("+secondaryModifier.getName()+" fetish)]");
 				}
+				
+			} else if(primaryModifier == TFModifier.CLOTHING_CREAMPIE_RETENTION) {
+				String area = "";
+				switch(secondaryModifier) {
+					case TF_FACE:
+						area = "stomach";
+						break;
+					case TF_ASS:
+						area = "ass";
+						break;
+					case TF_VAGINA:
+						area = "pussy";
+						break;
+					case TF_VAGINA_URETHRA:
+						area = "vaginal urethra";
+						break;
+					case TF_PENIS_URETHRA:
+						area = "penile urethra";
+						break;
+					case TF_BREASTS:
+						area = "breasts";
+						break;
+					case TF_BREASTS_CROTCH:
+						area = target.getBreastCrotchShape()==BreastShape.UDDERS?"udders":"crotch boobs";
+						break;
+					case TF_SPINNERET:
+						area = "spinneret";
+						break;
+					default:
+						break;
+				}
+				effectsList.add("[style.colourExcellent(Retains)] "+area+" creampies");
 				
 			} else {
 				return getClothingTFDescriptions(primaryModifier, secondaryModifier, potency, limit, user, target);

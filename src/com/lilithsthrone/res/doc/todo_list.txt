@@ -6,198 +6,85 @@ Not everything in this file is up-to-date, and everything is subject to change a
 	
 	Patch notes:
 	
-	Engine/Modding:
-		Minor improvements to Body.java class xml save formatting.
-		Added copy constructors to all body part classes.
-	
-	Gameplay:
-		If the 'non-con' and 'rape-play allowed by default' content settings are enabled, then random NPCs with the unwilling fuck toy fetish will have 'rape-play' sex actions after defeating them in combat instead of the normal 'sex' ones.
-	
-	Items:
-		You can now use the arcane makeup set in sex.
-		Added a new 'creampie retention' enchantment for clothing, which when used in combination with an orifice modifier, prevents creampies from being lost over time in the associated orifice.
-	
-	Sex:
-		Mute NPCs will no longer act as though they're trying to talk when reacting to the possible loss of their orifices' virginity.
-		Orgasming characters will now only say the 'get pregnant' lines when giving their partner a creampie if their 'impregnation' fetish desire is positive, their partner is fertile, and the orgasming character is virile.
-		Re-added 'Finger insemination' action which was temporarily removed from Brax's old sex content some time in v0.2.x. The action is now split into 4, which take the form of: partner-start-fingering, partner-ongoing-fingering, self-start-fingering, and self-ongoing-fingering.
-		Added tracking of cum on body parts during sex, which can be seen in the inventory slot tooltips, and which is used to determine the availability and effects of the re-added 'Finger insemination' sex actions.
-	
-	Combat:
-		'Feral bite' now critically hits when the target has less than 25% health remaining.
+	Tattoos:
+		Added a 'Save/Load' dialogue when customising tattoos, allowing you to save your tattoo presets and then quickly load them into other slots or onto other characters.
+		Tattoos can now be enchanted with 'creampie retention' in the same manner as clothing, and enchanted clothing or tattoos with a creampie retention enchantment now have the generic name postfix of 'of plugging' instead of 'of transformation'.
+		Added a 'Modify' button to the tattoo addition screen, allowing you to modify your current tattoos instead of having to remove and then add new ones.
+		The 'written out' tattoo counter style is now capitalised.
+		Improved the images for 'Horse-shoe' and 'Lines' tattoos, renamed 'Paw' tattoo to 'Dog paw' and improved the image, and added 'Detailed flowers' and 'Cat paw' tattoos.
 	
 	Other:
-		Added a 'Lip lisps' content setting, allowing you to enable or disable the lisp effect gained from having huge lips. (Accessed via 'Content options' -> 'Bodies' -> 'Lip lisps', being enabled by default.)
-		Several very minor improvements to UI (transformation menu modifiers buttons, transparent covering icon, piercing inventory tooltips).
-		Renamed 'clear' body covering to 'transparent' to make it a little more obvious what the covering was meant to represent.
-		Dolls now correctly have doll-specific fluids (milk, cum, girlcum), which all start with 'slimy' and 'mineral oil' fluid modifiers. Doll fluids are worth 1/4 that of normal fluids.
-		When a creampie dirties clothing that's covering the creampied orifice, the game is no longer interrupted by a message telling you that that's just happened, and instead a 'Creampie' event is added to the event log (in the bottom-right of the UI).
-		Increased the true age of several unique demon characters (Amber, Kate, Natalya, Zaranix, and Lunexis), although their 'age appearance' remains unaffected.
+		Kate's womb tattoo now tracks current litter size, and she has some minor dialogue related to this when the player reacts to her pregnancy for the first time.
+		The 'D.E.C.K' item is now classed as a unique item, and after purchasing one from Saellatrix, you are unable to purchase any more. If you have more than one D.E.C.K., extras will be removed when loading into this version and the cost will be refunded.
+		The 'Nymphomaniac' perk now causes the owner to gain the 'Pent-up' and 'Chastity' status effects twice as quickly as normal.
 	
 	Bugs:
-		Parsing fixes.
-		Fixed rare issue where the game would sometimes freeze and crash when an orgasm action caused body parts to get covered in cum.
-		Fixed bug where the covering of taurs' asses and hips was linked to their torso covering instead of their leg covering.
-		Fixed bug where unique NPCs who are your slaves (i.e. Scarlett and Brax) would never go to sleep.
-		The 'barren' and 'firing blanks' perks now correctly stop applying their anti-pregnancy/impregnation effects when removed from your active trait bar.
-		Additional speech patterns (such as those in bimbo speech) are no longer applied at the start of sentences. (So weird sentences such as 'Hello., um, I'm a bimbo!' will no longer appear.)
-		The gender of offspring is no longer determined solely by gender preferences, and instead now correctly takes into account the 'chanceForMaleOffspring' value from the mother's race.
-		Fixed bug where demonic offspring were unaffected by genetics.
-		Fixed bug with stored cum (in the milking room and in orifices), where if the cum provider was transformed, their transformation would be reflected in their stored cum. (i.e. A character's stored cum now correctly saves their genetics at the moment of storage.)
-		Fixed bug where if you attacked random characters who you've befriended in Elis's alleyways, you'd be presented with a scene which had no actions, preventing you from progressing.
-		Made some very minor dialogue improvements to random NPC post-combat dialogue and corrected some minor inconsistencies in some of the scenes.
-		Using the debug menu in sex will now correctly return you to the sex scene when exiting from it, instead of putting you inthe default dialogue and thereby breaking the game.
-		
-		
-	[x] shark orgasm crash - cumming on own legs when the option presents itself sometimes causes the crash or doesn't
-	[x] FAF character - Natalya
-	[x] improve unique character centaur height (Natalya)
-	[x] Centaur ass covering description wrong
-		Her very wide hips and huge butt are part of her feral lower body, and are covered in pale lilac, smooth skin
-		[natalya.assFullDescription(true)]
-		ass and hip coverings are using incorrect covering
-	[x] Natalya cock to just ebony
-	[x] add content option for lisp based on lip size
-	[x] slaves that are also non-random NPCs (Scarlett and Brax) never sleep anymore
-	[-] Add transparent for doll colouring
-	[x] transparent UI improvement -> make circular gradient
-	[x] sex action speech checks for mute (PenisAss and check for others)
-	[x] test witch seal (bug fixed?)
-	[x] NPCs say the "get pregnant" lines even with a condom on or if no chance of impregnation
-		[x] also should be pregnancy fetish based
-	[x] Bimbo parsing at start of sentence " before.​, uh, As to what, "
-		[pc.speech(haven't seen us before. As to what goods I can offer, we've brought)]
-	[x] I (light-skinned) impregnated myself using the milk machine, and somehow my daughter ended up black.
-		[x] demons don't seem to use genetics -> getPreGeneratedBody(
-			[x] test
-		[x] should be using TrueRace for all genetics and stuff............ aaaaaaaaaaaaaaaaaaaaaa
-	[x] Race.chanceForMaleOffspring not used in genetics...
-	[x] Issue with father character's current cum overriding stored cum values (i.e. if father TF'd from demon to human after cum stored, offspring will be humans...)
-		[-] need to create Genetics class and store all information on the body in that, then FluidCum can have Genetics object
-		[x] just use Body instead
-			[x] improve Body saving formats
-				[x] orifice mods
-				[x] tongue mods
-				[x] penetration mods
-				[x] fluid mods
-			[x] FluidStored
-				[x] test to make sure it doesn't break
-					[x] loading breaks
-						[x] body element
-						[x] cum/milk/girlcum element names
-				[x] this.rollForPregnancy checks
-				[x] ingestFluid using incorrect body
-				[x] check for character's current virility for rollForPregnancy
-					[x] virility save state
-				[x] test body saving in milking room
-				[x] handle Main.game.getCharacterUtils().generateHalfDemonBody( instances with getPreGeneratedBody( instead
-				[x] test sex rollForPreg
-				[x] test version compatibility
-				[x] OffspringSeed
-				[x] check usage in:
-					[x] milking room
-					[x] stored in orifice
-					[-] condoms
-				[x] make sure to use in rollForPregnancy
-	[#npc.setBodyUsingSubspeciesPreference(GENDER_F_P_V_B_FUTANARI, SUBSPECIES_HORSE_MORPH)]
-	[x] Orgasm issue, says "shooting deep inside of you" with handjob climax
-	
-	CONDOMS:
-	[x] track cum as FluidStored
-	[x] add use to artificially inseminate characters
-		[x] add options after use to determine orifice
-			[x] handle condom loss when selecting 'Back'
-			[x] orifice selection
-			[x] test in sex
-				[x] area access
-				[x] instant lubrication
-			[x] 'Use all' handling
-		[x] makeup kit for testing sex use item dialogue
-			[x] in sex, need to stop additional dialogue from scrolling
-			[x] add end dialogue text and sex effects
-			[x] prevent escape from dialogue by opening phone
-	[-] condoms should display name of cum provider and quantity in description
-	[x] limit usage based on unique (account for slave)
-	
-	[x] SS messages
-	
-	[x] If rape-play content is 'on at start', then make it so that NPCs with the unwilling fuck toy fetish present you with the 'rape' action even if they're attracted to you
-		Main.getProperties().hasValue(PropertyValue.rapePlayAtSexStart)
-		[x] Add 3 sex methods to NPC
-		[x] Replace 'sex' actions with 'Rape-play'
-			[x] Dominion
-			[x] Submission
-			[x] Elis
-				[x] sex
-				[x] submit
-		[x] Rape-play: dialogue post-combat scene, and use rape start for sex starting scenes
-			[x] Dominion
-			[x] Submission
-			[x] Elis
-	[x] Betrayed NPCs need to have rape sex actions instead of normal
-		[x] Dominion
-		[x] Submission
-		[x] Elis
-	[x] Test
-		[x] Elis alleyway standard test
-			[x] Elis alleyway betrayal after combat addition
-		[x] Rape play
-			[x] sex start scene
-		[x] Betrayed post-victory scene & rape
-		[x] post-sex scene should reflect NPC betrayal
-	
-	TEST:
-	[-] "Deep throat" orgasm doesn't react to condoms being used
-	[-] So, while riding cock, kissing him and fingering my own ass, he tells me to pull out because he doesnt want to taste my cum
-	[-] Need to prevent prologue sex from denying positions
-	[-] Also there's a minor problem with removing the condom when you're having sex.
-		When you click on the condom and then choose "discard", it seemingly does nothing, but after closing the inventory the condom will be removed,
-		 but you won't have a "discard" message like you normally would but checking your clothing menu you will see it has been removed. (this was present in the previous version as well)
-	[-] >go to the breeding lottery in submission
-		>put condoms on everyone except my chosen winner
-	
-	[x] doll fluids have value?
-		[#npc.getBreastType().getRace().getName(npc)]
-	[x] add clothing enchantment which prevents creampies from gradually disappearing
-		[x] Creampie retention + area
-			[x] add to character stats
-				[x] test save + load
-				[x] test multiple same enchantment
-			[x] test effect
-			[x] add description to creampie SEs
-	[x] should cum dirtying clothes really be an interruptable event?
-		[x] replace with event log entry
-	[x] make feral bite crit if bigger than target
-	[x] unique demons should be older?
-		[#amber.getAgeValue()][#amber.setAge(87)][#amber.getAgeValue()][#amber.getAppearsAsAgeValue()]
-	[x] debug menu do not interrupt sex
-	[x] add FINGER_INSEMINATION action from BackToWall
-		[x] conversion to new format
-		[x] self
-		[x] add cum tracking to sex
-		[x] remove cum from areas when used
-		[x] add tooltip to show how much cum on body part
-		[x] additional cum areas not being accounted for
-		[x] cum amount should be split by however many areas there are
-		[x] multiple slots should be consolidated in ingestion String
-		[x] remove cum entry if down to 0
-		[x] tooltip to say no cum available in sex if none is detected
-		[] tooltip not showing cum info
-			[x] blocked area (racial part)
-		[x] clothing interaction
-			[x] Should be using InventorySlot instead... aaaaaaaaaaaaa
-			[x] clothing tooltip
-			[x] clothing removal should clear it
+		Characters who have a negative desire towards the pregnancy or cum addict fetishes will no longer use the 'Finger insemination' sex actions (so Lilaya will no longer use this action and then get mad at you for impregnating her).
+		When buying a doll, Saellatrix now correctly says that your doll will be wearing a maid uniform instead of cat lingerie when confirming your choices.
+		Fixed bug where Vicky would often repeatedly react to her and the player's pregnancy as though she was seeing it for the first time.
+		Fixed incorrect tooltip descriptions and sizing for the 'Add/Remove' buttons in the tattoo management menu.
+		The tooltip for the active item in the enchantment load/save screen now works.
+		Reduced the chance for demons to have male offspring from 75% to 10%.
+		Fixed NPC transformative potion generation setting ass size instead of hip size.
+		Fixed issue where multiple characters with the 'object of desire' trait would all increase the orgasms required before satisfied, instead of this effect only being applied once as intended.
+		Fixed issue where arm wings were described in a character's body description as being large enough to allow flight when they actually weren't.
 	
 	
-	[] major bug fixes
+	[x] finger insemination check for NPC usage (Lilaya check)
+	[x] when buying a doll I selected the maid outfit and when confirming it resulted in being told I selected the cat stuff
+	[x] add creampie retention for tattoos as well
+		[x] 'of transformation'
 	
-	[] developers chat
+	TATTOOS:
+		[x] Kate's womb tattoo should either have an offspring birthed counter, or a litter size counter
+			[x] reaction to it when pregnancy revealed dialogue
+		[x] make tattoos an object we can save, too? Having to apply the same shapes, colors, and text to nearly 100 slaves is a nightmare
+			[x] save dialogue
+			[x] tooltips
+			[x] functionality
+				[x] check writing text box filled in
+			[x] test loading of area limitations
+			[x] add to all tattoo dialogues
+				[x] Kate
+				[x] Penelope
+				[x] Slaves
+				[x] Character creation?
+		[x] add 'customise' button to existing tattoos instead of having to remove
+		[x] enchant UI needs to hide the 'x1' for tattoos
+		[x] counter style written out should be capitalised
+		[-] Both in self description and stat description when moving around. I have lactation enchantments on tattoos for them and they show the enchantment working on my crotch tits.
+			But the tool tip ref is not showing for them lactating.
+		[-] Make tattoo icon light up if they have tattoos
+		[-] the tattoo option for Dominant sex counter says 0, even if they've definitely had Dom sex?
+		[-] when in tattoo menu, if you then click "trade with kate", and then go back to tattoos, screen content doesn't parse
+		[-] Right panel resets when switching tattoos in slave management
+		[x] Tattoo add button always references removal
+		[] add more tattoos
+			[x] cat paw
+			[] kiss
+			[] bird
+			[] stag
+			[] lock
+			[] key
+			[] flames
+		[x] improve
+			[x] paw print (dog)
+			[x] horse shoe
+			[x] lines
+			[x] flowers -> detailed variant
+		[] merge PR1805 when github finally sends me the auth code email... -.-
+	[x] developers chat
+		[x] bugs
+		[x] make DECK a key item
+			[x] once owned, disable repeat purchase
+			[x] refund cost if have more than 1 when loading in
+	
 	
 	[] PRs
 		[] feb 29th a nofap day because LT crashes when launched on the leap day
 			[] Check for Month.FEBRUARY
 	
+	[] major bug fixes
 	
 	[] club partners don't offer drinks as much as they should
 	
@@ -205,11 +92,9 @@ Not everything in this file is up-to-date, and everything is subject to change a
 	
 	[] deep sleeper suggestion
 	
-	[] nymphomaniac slaves should become pent up much quicker than normal
+	[x] nymphomaniac slaves should become pent up much quicker than normal
 	
 	[] in prologue, Lilith should react to player sex
-	
-	HOTFIX RELEASE!
 	
 	ARTWORK POSTS
 		[] Yui art
@@ -336,13 +221,17 @@ Not everything in this file is up-to-date, and everything is subject to change a
 	
 	[] gential slit option
 	
-	[] copy-paste slave settings
-	
 	[] Sterope sub content - probably would have been clearer if there was an option to sit with her and try to attract a taur partner together maybe
 		[] also feral only unlocked after seeing it as dom?
 	
 	[] feral wolves too small?
 	
+	[] copy-paste slave settings
+		[] implement as save/load
+		[] when loading, check which parts you want loaded
+			[] job
+			[] permissions
+			
 	[] You can cheat from getting a hole penetrated by fingering yourself there.
 		You do have a move in sex scenes to get the the sub fingering themselves to stop but it uses up their turn to stop them from fingering. so as long as the PC cotiniously finger themselves they dont need anything like sealed clothing to stop penetrations. 
 		[] Add a 'restrict partner's self actions' for NPCs for X turns if they can't access?
@@ -1502,8 +1391,6 @@ Not everything in this file is up-to-date, and everything is subject to change a
 	
 	you get jumped and ur catgirl gf is just jacking off in the corner
 	
-	Kate's womb tattoo should either have an offspring birthed counter, or a litter size counter
-	
 	allow hypno watch usage on non-unique NPCs
 	
 	set weapon damage as tier constants
@@ -1555,8 +1442,6 @@ Not everything in this file is up-to-date, and everything is subject to change a
 	- Mute attackers need dialogue variations
 	- Roxy recognize if you've consumed a bottle of Angel's Nectar to cure the addiction to her at the very least
 	- You can instantly re-encounter clubbing partners...
-	
-	make tattoos an object we can save, too? Having to apply the same shapes, colors, and text to nearly 100 slaves is a nightmare
 	
 	bring back a way to have dom sex with your partner and the loser as both subs?
 		I used to do it by fucking partner, then changing position so that the mugger is forced to join, but now it's only possible to have dominant sex with one or the either
@@ -2258,9 +2143,6 @@ Not everything in this file is up-to-date, and everything is subject to change a
 	
 	need to add generic sex NPCS to NPC list (for stocks slaves and in slave jobs)
 	
-	Both in self description and stat description when moving around. I have lactation enchantments on tattoos for them and they show the enchantment working on my crotch tits.
-		But the tool tip ref is not showing for them lactating.
-	
 	Separate the oral fetishes as such that kissing is separate from the other oral fetishes.
 	
 	wash companions option
@@ -2648,7 +2530,7 @@ Not everything in this file is up-to-date, and everything is subject to change a
 	
 	Horn grabs doggy&oral, and deepthroat pace variations
 	
-	Make tattoo icon light up if they have tattoos
+	[] a slider for npc's spawning with cosmetics such as piercings, scars, and tattoos would be nice
 	
 	On game load, dialogue is parsed before characters are placed there, causing errors
 	
@@ -3125,8 +3007,6 @@ my character is a guy, so this is super confusing lol
 	When you import a character who's wearing jinxed clothing, the quest for unjinxing/enchanting is unavailable.
 	 The quest itself shows up on a page before you have the option to skip the prologue or not, and wearing another piece of jinxed clothing doesn't retrigger the quest
 	
-	the tattoo option for Dominant sex counter says 0, even if they've definitely had Dom sex?
-	
 	@SuppressWarnings("deprecation")
 	
 	Changing virility of partner affects cum already in vagina...
@@ -3138,8 +3018,6 @@ my character is a guy, so this is super confusing lol
 	Hmm, it's probably better for it to be less than 5%, since it would always take 20 ticks or less to fully transform something.
 	 Mind you, most of the transformations are finished long before 20 ticks, except for those fluid and height based ones.
 	
-	a slider for npc's spawning with cosmetics such as piercings, scars, and tattoos would be nice
-	
 	Add attackers wanting multiple orgasms
 	
 	Not sure what's causing it, but I'm getting a bug where my slaves are listed as pregnant by the tracker, but don't gain the pregnancy buff/debuff,
@@ -3147,16 +3025,9 @@ my character is a guy, so this is super confusing lol
 		To clarify: Other NPC's can get pregnant and give birth, but not my slaves for some reason.
 	Edit: Slaves CAN give birth, but the tracker still thinks they're heavily pregnant, even after birth
 	
-	
 	Need to add way to get scars
 	
-	when in tattoo menu, if you then click "trade with kate", and then go back to tattoos, screen content doesn't parse
-	
 	make DOMINION_ALLEYWAY_SPAWN, SUBMISSION_TUNNEL_SPAWN work for clothing
-	
-	Conceal tattoo slots
-	
-	Right panel resets when switching tattoos in slave management
 	
 	Add flying ability like teleport
 	
@@ -5894,12 +5765,7 @@ BlobHyperSweats1
 	day 0, I go outside (on the storm) got attacked by a cow girl, non consensual activated, maximum dficulty, I got smached, but on the sex, the ask to be freed give the dirty talk description onhover (but give the good acction)
 	
 	
-	
-	
-	
 	------------
-	
-	There's no skin color preference settings? Skin color preference settings when?
 	
 	Slaves still aren't interacting correctly outside of work/between jobs.
 	
@@ -8202,8 +8068,6 @@ When it should be an indication that I'm gaining testicles, and the three messag
 		Hair style
 		Eye shapes.
 	
-	tattoos
-	
 	Gate options in screen again
 		Tidy up fetishes:
 		non-con tease
@@ -9506,8 +9370,6 @@ Also noticed the Stop partner self action option disappears.
 		
 	Brax secretary TF warning
 	
-	
-	I'm also going to greatly expand the character creation options at the start of the game. There will be more options for hair/eye/skin colours, as well as options for starting piercings/tattoos/clothing.
 	 I'll also add more detailed body options, so you'll be able to customise all your starting body sizes/capacities/elasticities etc.
 	
 	Mutual orgasms (cum inside and pull out)

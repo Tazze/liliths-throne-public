@@ -1750,11 +1750,11 @@ public class TooltipInformationEventListener implements EventListener {
 						"<div class='description' style='height:"+(descriptionHeightOverride>0?(descriptionHeightOverride+26):"176")+"px;'>"+description+"</div>"));
 				
 			} else {
-				Main.mainController.setTooltipSize(360, descriptionHeightOverride>0?descriptionHeightOverride+64+32:175);
+				Main.mainController.setTooltipSize(360, descriptionHeightOverride>0?descriptionHeightOverride+64+20:175);
 
 				Main.mainController.setTooltipContent(UtilText.parse(
 						"<div class='title'>"+title+"</div>"
-						+ "<div class='description' "+(descriptionHeightOverride>0?"style='height:"+(descriptionHeightOverride+26)+"px;'":"")+">" + description + "</div>"));
+						+ "<div class='description' "+(descriptionHeightOverride>0?"style='min-height:0; height:"+(descriptionHeightOverride+16)+"px;'":"")+">" + description + "</div>"));
 			}
 		}
 

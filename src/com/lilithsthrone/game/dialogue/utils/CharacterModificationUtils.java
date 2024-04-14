@@ -6534,7 +6534,7 @@ public class CharacterModificationUtils {
 						+ "<div class='overlay no-pointer' id='TATTOO_INFO_"+invSlot.toString()+"'></div>"
 					+ "</div>")
 				
-				+ "<div class='container-half-width inner' style='width:48%;margin:1%;'>"
+				+ "<div class='container-half-width inner' style='width:48%;margin:0 1%;padding:0;'>"
 					+ "<div style='float:left; width:98%; margin:0 1%; padding:0;'>"
 						+ "<div class='normal-button"+(disabled?" disabled":"")+"' "+(!disabled?"id='TATTOO_ADD_REMOVE_"+invSlot.toString()+"'":"")+" style='width:100%;'>"
 							+(tattooInSlot==null
@@ -6542,6 +6542,11 @@ public class CharacterModificationUtils {
 								:(SuccubisSecrets.invSlotTattooToRemove==invSlot || !Main.getProperties().hasValue(PropertyValue.tattooRemovalConfirmations)?"[style.colourBad(Remove)]":"Remove"))
 						+"</div>"
 					+ "</div>"
+					+ (Main.game.isInNewWorld()
+							?"<div style='float:left; width:98%; margin:0 1%; padding:0;'>"
+									+ "<div class='normal-button"+(disabled || tattooInSlot==null?" disabled":"")+"' "+(!disabled && tattooInSlot!=null?"id='TATTOO_MODIFY_"+invSlot.toString()+"'":"")+" style='width:100%;'>Modify</div>"
+								+ "</div>"
+							:"")
 					+ (Main.game.isInNewWorld()
 						?"<div style='float:left; width:98%; margin:0 1%; padding:0;'>"
 								+ "<div class='normal-button"+(disabled || tattooInSlot==null?" disabled":"")+"' "+(!disabled && tattooInSlot!=null?"id='TATTOO_ENCHANT_"+invSlot.toString()+"'":"")+" style='width:100%;'>Enchant</div>"

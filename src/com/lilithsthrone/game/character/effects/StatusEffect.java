@@ -7341,10 +7341,14 @@ public class StatusEffect {
 		}
 		@Override
 		public boolean isConditionsMet(GameCharacter target) {
+			int hoursToPentUp = 24;
+			if(target.hasTrait(Perk.NYMPHOMANIAC, true)) {
+				hoursToPentUp = 8;
+			}
 			return !target.isPlayer()
 					&& target.isSlave()
 					&& !target.isDoll()
-					&& ((NPC)target).getLastTimeOrgasmedSeconds()+(60*60*24)<Main.game.getSecondsPassed();
+					&& ((NPC)target).getLastTimeOrgasmedSeconds()+(60*60*hoursToPentUp)<Main.game.getSecondsPassed();
 		}
 	};
 	
@@ -7362,12 +7366,17 @@ public class StatusEffect {
 		@Override
 		public String extraRemovalEffects(GameCharacter target) {
 			if(target.isWearingChastity()) {
+				int denominator = 1;
+				if(target.hasTrait(Perk.NYMPHOMANIAC, true)) {
+					denominator = 2;
+				}
+					
 				if(target.hasStatusEffect(CHASTITY_REMOVED_2)) {
-					target.addStatusEffect(CHASTITY_2, 60*60*24*2); // 2 instead of 5
+					target.addStatusEffect(CHASTITY_2, (60*60*24*2)/denominator); // 2 instead of 5
 					target.removeStatusEffect(CHASTITY_REMOVED_2);
 					
 				} else if(target.hasStatusEffect(CHASTITY_REMOVED_3)) {
-					target.addStatusEffect(CHASTITY_3, 60*60*24*3); // 3 instead of 7
+					target.addStatusEffect(CHASTITY_3, (60*60*24*3)/denominator); // 3 instead of 7
 					target.removeStatusEffect(CHASTITY_REMOVED_3);
 					
 				} else if(target.hasStatusEffect(CHASTITY_REMOVED_4)) {
@@ -7375,7 +7384,7 @@ public class StatusEffect {
 					target.removeStatusEffect(CHASTITY_REMOVED_4);
 					
 				} else {
-					target.addStatusEffect(CHASTITY_2, 60*60*24*5); // 5 days
+					target.addStatusEffect(CHASTITY_2, (60*60*24*5)/denominator); // 5 days
 				}
 			}
 			return "";
@@ -7396,8 +7405,12 @@ public class StatusEffect {
 					&& !target.hasStatusEffect(CHASTITY_4);
 		}
 		@Override
-		public int getApplicationLength() {
-			return 60*60*24*2; // 2 days
+		public int getApplicationLength(GameCharacter target) {
+			int denominator = 1;
+			if(target.hasTrait(Perk.NYMPHOMANIAC, true)) {
+				denominator = 2;
+			}
+			return (60*60*24*2)/denominator; // 2 days
 		}
 		@Override
 		public boolean isConstantRefresh() {
@@ -7418,12 +7431,16 @@ public class StatusEffect {
 			Util.newArrayListOfValues("[style.colourSex(Increasing in intensity...)]")) {
 		@Override
 		public String getDescription(GameCharacter target) {
-			return UtilText.parse(target, "[npc.Name] [npc.has] been locked in chastity for over two days now, and [npc.is] already starting to feel frustrated at not being able to have a proper orgasm...");
+			return UtilText.parse(target, "[npc.Name] [npc.has] been locked in chastity for some time now, and [npc.is] already starting to feel frustrated at not being able to have a proper orgasm...");
 		}
 		@Override
 		public String extraRemovalEffects(GameCharacter target) {
 			if(target.isWearingChastity()) {
-				target.addStatusEffect(CHASTITY_3, 60*60*24*7); // 7 days
+				int denominator = 1;
+				if(target.hasTrait(Perk.NYMPHOMANIAC, true)) {
+					denominator = 2;
+				}
+				target.addStatusEffect(CHASTITY_3, (60*60*24*7)/denominator); // 7 days
 			}
 			return "";
 		}
@@ -7442,7 +7459,7 @@ public class StatusEffect {
 			Util.newArrayListOfValues("[style.colourSex(Increasing in intensity...)]")) {
 		@Override
 		public String getDescription(GameCharacter target) {
-			return UtilText.parse(target, "[npc.Name] [npc.has] been locked in chastity for over a week now, and [npc.is] feeling very frustrated and pent-up at not being able to have a proper orgasm...");
+			return UtilText.parse(target, "[npc.Name] [npc.has] been locked in chastity for a long time, and [npc.is] feeling very frustrated and pent-up at not being able to have a proper orgasm...");
 		}
 		@Override
 		public String extraRemovalEffects(GameCharacter target) {
@@ -7466,7 +7483,7 @@ public class StatusEffect {
 			Util.newArrayListOfValues("[style.colourSex(Maximum intensity)]")) {
 		@Override
 		public String getDescription(GameCharacter target) {
-			return UtilText.parse(target, "[npc.Name] [npc.has] been locked in chastity for over two weeks now, and [npc.is] feeling extremely frustrated and pent-up at not being able to have a proper orgasm...");
+			return UtilText.parse(target, "[npc.Name] [npc.has] been locked in chastity for what feels like an eternity, and [npc.is] feeling extremely frustrated and pent-up at not being able to have a proper orgasm...");
 		}
 		@Override
 		public String extraRemovalEffects(GameCharacter target) {
@@ -7531,7 +7548,7 @@ public class StatusEffect {
 			return !target.isWearingChastity() && target.hasStatusEffect(CHASTITY_2);
 		}
 		@Override
-		public int getApplicationLength() {
+		public int getApplicationLength(GameCharacter target) {
 			return 60*60*24*1; // 1 day
 		}
 		@Override
@@ -7582,7 +7599,7 @@ public class StatusEffect {
 			return !target.isWearingChastity() && target.hasStatusEffect(CHASTITY_3);
 		}
 		@Override
-		public int getApplicationLength() {
+		public int getApplicationLength(GameCharacter target) {
 			return 60*60*24*1; // 1 day
 		}
 		@Override
@@ -7636,7 +7653,7 @@ public class StatusEffect {
 //			return !target.isWearingChastity() && target.hasStatusEffect(CHASTITY_4);
 //		}
 //		@Override
-//		public int getApplicationLength() {
+//		public int getApplicationLength(GameCharacter target) {
 //			return 60*60*24*1; // 1 day
 //		}
 //		@Override

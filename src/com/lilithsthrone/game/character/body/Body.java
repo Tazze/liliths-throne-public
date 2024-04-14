@@ -3097,6 +3097,8 @@ public class Body implements XMLSaving {
 					sb.append(" [style.colourSlime(As they're made out of slime, flight is rendered impossible...)]");
 				} else if(this.getBodyMaterial() == BodyMaterial.SILICONE) {
 					sb.append(" [style.colourDoll(As they're made out of silicone, flight is rendered impossible...)]");
+				} else if(this.getLeg().getLegConfiguration().getMinimumWingSizeForFlight(this).getValue()>WingSize.THREE_LARGE.getValue()) {
+					sb.append(" They aren't large enough to allow [npc.herHim] to fly.");
 				} else {
 					sb.append(" [style.colourBlue(They are large and powerful enough to allow [npc.herHim] to fly!)]");
 				}

@@ -1247,7 +1247,7 @@ public class ItemType {
 			PresetColour.CLOTHING_BLUE_LIGHT,
 			PresetColour.CLOTHING_PINK_LIGHT,
 			PresetColour.CLOTHING_PURPLE,
-			Rarity.LEGENDARY,
+			Rarity.QUEST,
 			Util.newArrayListOfValues(new ItemEffect(ItemEffectType.DOLL_CONSOLE)),
 			Util.newArrayListOfValues()) {
 		@Override

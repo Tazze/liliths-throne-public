@@ -87,6 +87,7 @@ import com.lilithsthrone.game.character.fetishes.AbstractFetish;
 import com.lilithsthrone.game.character.fetishes.Fetish;
 import com.lilithsthrone.game.character.fetishes.FetishDesire;
 import com.lilithsthrone.game.character.markings.AbstractTattooType;
+import com.lilithsthrone.game.character.markings.Tattoo;
 import com.lilithsthrone.game.character.markings.TattooCountType;
 import com.lilithsthrone.game.character.markings.TattooCounter;
 import com.lilithsthrone.game.character.markings.TattooCounterType;
@@ -2985,6 +2986,23 @@ public class CreationController {
 							});
 						}
 					}, false);
+					StringBuilder sb = new StringBuilder();
+					boolean confirm = Main.getProperties().hasValue(PropertyValue.tattooRemovalConfirmations);
+					if (Main.game.isInNewWorld()) {
+						if (Main.game.getPlayer().getMoney()>=100) {
+							sb.append("It will cost "+UtilText.formatAsMoney(100, "span")+" to remove this tattoo!");
+						} else {
+							sb.append("You don't have the required "+UtilText.formatAsMoney(100, "span")+" to remove this tattoo!");
+							confirm = false;
+						}
+					} else {
+						sb.append("Remove this tattoo.");
+					}
+					if(confirm) {
+						sb.append(" (<i>You will need to click twice to remove it.</i>)");
+					}
+					MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation("Remove tattoo", sb.toString(), 32));
+					
 				} else {
 					DialogueNode nextDialogue;
 					if (currentNode.equals(CharacterCreation.CHOOSE_ADVANCED_APPEARANCE_TATTOOS)) {
@@ -3007,23 +3025,35 @@ public class CreationController {
 							}
 						});
 					}, false);
+					MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation("Add tattoo", "Click to proceed to the tattoo customisation screen.", 16));
 				}
-				StringBuilder sb = new StringBuilder();
-				boolean confirm = Main.getProperties().hasValue(PropertyValue.tattooRemovalConfirmations);
-				if (Main.game.isInNewWorld()) {
-					if (Main.game.getPlayer().getMoney()>=100) {
-						sb.append("It will cost "+UtilText.formatAsMoney(100, "span")+" to remove this tattoo!");
-					} else {
-						sb.append("You don't have the required "+UtilText.formatAsMoney(100, "span")+" to remove this tattoo!");
-						confirm = false;
-					}
+			}
+			
+			id = "TATTOO_MODIFY_"+invSlot;
+			if (MainController.document.getElementById(id) != null) {
+				DialogueNode nextDialogue;
+				if (currentNode.equals(CharacterCreation.CHOOSE_ADVANCED_APPEARANCE_TATTOOS)) {
+					nextDialogue = CharacterCreation.CHOOSE_ADVANCED_APPEARANCE_TATTOOS_ADD;
+				} else if (currentNode.equals(CompanionManagement.SLAVE_MANAGEMENT_TATTOOS)) {
+					nextDialogue = CompanionManagement.SLAVE_MANAGEMENT_TATTOOS_ADD;
+				} else if (currentNode.equals(CosmeticsDialogue.BEAUTICIAN_TATTOOS)) {
+					nextDialogue = CosmeticsDialogue.BEAUTICIAN_TATTOOS_ADD;
+				} else if (currentNode.equals(SuccubisSecrets.SHOP_BEAUTY_SALON_TATTOOS)) {
+					nextDialogue = SuccubisSecrets.SHOP_BEAUTY_SALON_TATTOOS_ADD;
 				} else {
-					sb.append("Remove this tattoo.");
+					throw new NullPointerException("This node doesn't have a nextDialogue assigned");
 				}
-				if (confirm) {
-					sb.append(" (<i>You will need to click twice to remove it.</i>)");
-				}
-				MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation("Remove tattoo", sb.toString()));
+				((EventTarget) MainController.document.getElementById(id)).addEventListener("click", e->{
+					Main.game.setContent(new Response("", "", nextDialogue) {
+						@Override
+						public void effects() {
+							SuccubisSecrets.invSlotTattooToRemove = null;
+							CharacterModificationUtils.resetTattooVariables(invSlot);
+							CharacterModificationUtils.tattoo = new Tattoo(BodyChanging.getTarget().getTattooInSlot(invSlot));
+						}
+					});
+				}, false);
+				MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation("Modify tattoo", "Click to proceed to the tattoo customisation screen.", 16));
 			}
 			
 			id = "TATTOO_ENCHANT_"+invSlot.toString();
@@ -3036,6 +3066,7 @@ public class CreationController {
 						}
 					});
 				}, false);
+				MainController.addTooltipListeners(id, new TooltipInformationEventListener().setInformation("Enchant tattoo", "Click to proceed to the tattoo enchantment screen.", 16));
 			}
 		}
 	}

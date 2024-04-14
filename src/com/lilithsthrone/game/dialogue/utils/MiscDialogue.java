@@ -687,7 +687,7 @@ public class MiscDialogue {
 	public static boolean hair = false;
 	private static int hairCost = 25_000;
 	public static boolean deck = false;
-	private static int deckCost = 1_000_000;
+	public static int deckCost = 1_000_000;
 	
 	public static boolean fucked = false;
 	private static int fuckedCost = 1_000;
@@ -774,7 +774,11 @@ public class MiscDialogue {
 				sb.append(applyWrapper("Erase barcode", "We'll remove the barcode tattoo from your doll's forehead before delivery.", PresetColour.GENERIC_MINOR_GOOD, "DOLL_BARCODE", "Remove", barcodeRemoval, barcodeCost, true));
 				sb.append(applyWrapper("Toy set", "Your doll will come equipped with a selection of toys.", PresetColour.BASE_PINK, "DOLL_TOYS", "Add", toySet, toyCost, true));
 				sb.append(applyWrapper("Hair", "We'll give your doll a head of synthetic hair.", PresetColour.BASE_BROWN_LIGHT, "DOLL_HAIR", "Add", hair, hairCost, true));
-				sb.append(applyWrapper("D.E.C.K.", "Purchase a D.E.C.K. with your doll, allowing you to fully customise it whenever you want.", PresetColour.GENERIC_EXCELLENT, "DOLL_DECK", "Purchase", deck, deckCost, true));
+				sb.append(applyWrapper("D.E.C.K.",
+						(Main.game.getPlayer().hasItemType(ItemType.DOLL_CONSOLE)
+							?"[style.italicsDisabled(You already have a D.E.C.K., and have no need for another...)]"
+							:"Purchase a D.E.C.K. with your doll, allowing you to fully customise it whenever you want."),
+						PresetColour.GENERIC_EXCELLENT, "DOLL_DECK", "Purchase", deck, deckCost, true, Main.game.getPlayer().hasItemType(ItemType.DOLL_CONSOLE)));
 			sb.append(endWrapper());
 
 			sb.append(startWrapper("Pre-delivery"));
@@ -1070,8 +1074,12 @@ public class MiscDialogue {
 	private static String endWrapper() {
 		return "</div>";
 	}
-	
+
 	private static String applyWrapper(String title, String description, Colour buttonColour, String buttonId, String buttonText, boolean buttonActive, int cost, boolean isCostAdditional) {
+		return applyWrapper(title, description, buttonColour, buttonId, buttonText, buttonActive, cost, isCostAdditional, false);
+	}
+	
+	private static String applyWrapper(String title, String description, Colour buttonColour, String buttonId, String buttonText, boolean buttonActive, int cost, boolean isCostAdditional, boolean isDisabled) {
 		StringBuilder sb = new StringBuilder();
 
 		String border = "border: 1px solid "+(buttonActive?buttonColour:PresetColour.BASE_GREY_DARK).toWebHexString()+"55;";
@@ -1082,9 +1090,9 @@ public class MiscDialogue {
 		
 		sb.append("<div class='container-full-width' style='width:100%; padding:0; margin:2px 0 2px 0; text-align:center; "+border+" "+background+"'>");
 			sb.append("<div class='container-full-width' style='width:20%; padding:0; margin:0;'>");
-				sb.append("<b>");
+				sb.append(isDisabled?"[style.boldDisabled(":"[style.bold(");
 					sb.append(title);
-				sb.append("</b>");
+				sb.append(")]");
 			sb.append("</div>");
 			
 			sb.append("<div class='container-full-width' style='width:55%; padding:0; margin:0;'>");
@@ -1094,7 +1102,13 @@ public class MiscDialogue {
 			sb.append("</div>");
 
 			sb.append("<div class='container-full-width' style='width:5%; padding:0; margin:0;'>");
-				if(buttonActive) {
+				if(isDisabled) {
+					sb.append(
+							"<div class='cosmetics-button disabled' "+buttonStyle+">"
+								+ buttonText
+							+ "</div>");
+					
+				} else if(buttonActive) {
 					sb.append(
 							"<div id='"+buttonId+"' class='cosmetics-button active' "+buttonStyle+">"
 								+ "<span style='color:"+buttonColour.toWebHexString()+";'>"+buttonText+"</span>"

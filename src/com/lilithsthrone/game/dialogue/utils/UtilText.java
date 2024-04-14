@@ -767,6 +767,13 @@ public class UtilText {
 	}
 	
 	public static String formatAsMoney(String money, String tag) {
+		if(!money.contains("[npc.")) { // DO not parse it out if this is a generic NPC's money
+			try {
+				int moneyInt = Integer.parseInt(UtilText.parse(money));
+				return formatAsMoney(moneyInt, tag, PresetColour.TEXT);
+			} catch(Exception ex) {
+			}
+		}
 		return formatAsMoney(money, tag, PresetColour.TEXT);
 	}
 	

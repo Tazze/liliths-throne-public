@@ -164,7 +164,7 @@ public enum RenderingEngine {
 			
 			equippedPanelSB.append("<div class='inventory-item-slot secondary' style='background-color:"+PresetColour.BACKGROUND.toWebHexString()+";'>"
 										+ "<div class='inventory-icon-content'>"
-											+SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing()
+											+SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing(charactersInventoryToRender)
 										+"</div>"
 									+ "<div class='overlay-inventory disabled'></div></div>");
 
@@ -491,7 +491,7 @@ public enum RenderingEngine {
 			equippedPanelSB.append("<div class='inventory-icon-content'>"
 										+(this.isRenderingTattoosLeft()
 											?SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchTattoo()
-											:SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing())
+											:SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing(charactersInventoryToRender))
 									+"</div>"
 									+ "<div class='overlay-inventory' id='TATTOO_SWITCH_LEFT'></div>");
 			
@@ -499,7 +499,7 @@ public enum RenderingEngine {
 			equippedPanelSB.append("<div class='inventory-icon-content"+getClassRarityIdentifier(Rarity.COMMON)+"'>"
 										+(this.isRenderingTattoosRight()
 												?SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchTattoo()
-												:SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing())
+												:SVGImages.SVG_IMAGE_PROVIDER.getTattooSwitchClothing(charactersInventoryToRender))
 									+"</div>"
 									+ "<div class='overlay-inventory' id='TATTOO_SWITCH_RIGHT'></div>");
 		}

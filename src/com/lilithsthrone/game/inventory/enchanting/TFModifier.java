@@ -1616,6 +1616,7 @@ public enum TFModifier {
 
 		tattooPrimaryList.add(TFModifier.CLOTHING_MAJOR_ATTRIBUTE);
 		tattooPrimaryList.add(TFModifier.CLOTHING_ATTRIBUTE);
+		tattooPrimaryList.add(TFModifier.CLOTHING_CREAMPIE_RETENTION);
 		tattooPrimaryList.add(TFModifier.TF_MOD_FETISH_BODY_PART);
 		tattooPrimaryList.add(TFModifier.TF_MOD_FETISH_BEHAVIOUR);
 		tattooPrimaryList.add(TF_FACE);

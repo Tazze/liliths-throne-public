@@ -1776,7 +1776,7 @@ public abstract class NPC extends GameCharacter implements XMLSaving {
 			}
 			
 			body.getAss().setAssSize(null, AssSize.FIVE_HUGE.getValue());
-			body.getAss().setAssSize(null, HipSize.FIVE_VERY_WIDE.getValue());
+			body.getAss().setHipSize(null, HipSize.FIVE_VERY_WIDE.getValue());
 		}
 		
 		//Breasts:

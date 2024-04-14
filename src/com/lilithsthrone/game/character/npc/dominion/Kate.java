@@ -47,6 +47,9 @@ import com.lilithsthrone.game.character.effects.StatusEffect;
 import com.lilithsthrone.game.character.fetishes.Fetish;
 import com.lilithsthrone.game.character.gender.Gender;
 import com.lilithsthrone.game.character.markings.Tattoo;
+import com.lilithsthrone.game.character.markings.TattooCountType;
+import com.lilithsthrone.game.character.markings.TattooCounter;
+import com.lilithsthrone.game.character.markings.TattooCounterType;
 import com.lilithsthrone.game.character.markings.TattooType;
 import com.lilithsthrone.game.character.markings.TattooWriting;
 import com.lilithsthrone.game.character.markings.TattooWritingStyle;
@@ -129,6 +132,9 @@ public class Kate extends NPC {
 		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.9.8")) {
 			this.setAge(361);
 		}
+		if(Main.isVersionOlderThan(Game.loadingVersion, "0.4.9.9")) {
+			this.addTattoo(InventorySlot.GROIN, getKatesGroinTattoo());
+		}
 	}
 
 	@Override
@@ -173,24 +179,7 @@ public class Kate extends NPC {
 
 		if(this.getTattooInSlot(InventorySlot.GROIN)==null) {
 			try {
-				Tattoo tat = new Tattoo(
-						TattooType.getTattooTypeFromId("innoxia_heartWomb_heart_womb"),
-						PresetColour.CLOTHING_PINK,
-						PresetColour.CLOTHING_PINK_LIGHT,
-						PresetColour.CLOTHING_PURPLE,
-						true,
-						new TattooWriting(
-								"Breed me!",
-								PresetColour.CLOTHING_PINK_LIGHT,
-								true,
-								TattooWritingStyle.ITALICISED),
-						null);
-				
-				for(int i=0; i<10; i++) {
-					tat.addEffect(new ItemEffect(ItemEffectType.TATTOO, TFModifier.CLOTHING_ATTRIBUTE, TFModifier.FERTILITY, TFPotency.MAJOR_BOOST, 0));
-				}
-				
-				this.addTattoo(InventorySlot.GROIN, tat);
+				this.addTattoo(InventorySlot.GROIN, getKatesGroinTattoo());
 				
 				this.addTattoo(InventorySlot.TORSO_OVER,
 						new Tattoo(
@@ -519,5 +508,29 @@ public class Kate extends NPC {
 
 		String returnedLine = speech.get(Util.random.nextInt(speech.size()));
 		return UtilText.parse(this, target, "[npc.speech("+returnedLine+")]");
+	}
+	
+	private Tattoo getKatesGroinTattoo() {
+		Tattoo tat = new Tattoo(
+				TattooType.getTattooTypeFromId("innoxia_heartWomb_heart_womb"),
+				PresetColour.CLOTHING_PINK,
+				PresetColour.CLOTHING_PINK_LIGHT,
+				PresetColour.CLOTHING_PURPLE,
+				true,
+				new TattooWriting(
+						"Breed me!",
+						PresetColour.CLOTHING_PINK_LIGHT,
+						true,
+						TattooWritingStyle.ITALICISED),
+				new TattooCounter(
+						TattooCounterType.CURRENT_PREGNANCY,
+						TattooCountType.NUMBERS,
+						PresetColour.CLOTHING_PINK_LIGHT,
+						true));
+		
+		for(int i=0; i<10; i++) {
+			tat.addEffect(new ItemEffect(ItemEffectType.TATTOO, TFModifier.CLOTHING_ATTRIBUTE, TFModifier.FERTILITY, TFPotency.MAJOR_BOOST, 0));
+		}
+		return tat;
 	}
 }
