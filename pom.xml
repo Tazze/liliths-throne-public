@@ -8,7 +8,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>21</maven.compiler.release>
-		<javafx.version>17.0.2</javafx.version> <!-- DO NOT UPDATE THIS, YOU WILL BREAK ALL THE MOUSE EVENTS https://bugs.openjdk.org/browse/JDK-8315915 -->
+		<javafx.version>17</javafx.version> <!-- DO NOT UPDATE THIS, YOU WILL BREAK ALL THE MOUSE EVENTS https://bugs.openjdk.org/browse/JDK-8315915 -->
 		<nashorn.version>15.4</nashorn.version>
 		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
 		<maven-shade-plugin.version>3.5.2</maven-shade-plugin.version>
