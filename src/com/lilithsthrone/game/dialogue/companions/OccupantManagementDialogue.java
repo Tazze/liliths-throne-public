@@ -1339,8 +1339,11 @@ public class OccupantManagementDialogue {
 						+ "<div style='float:left; width:15%; margin:0; padding:0;'>"
 							+ (Main.game.getDialogueFlags().getSlaveTrader()!=null
 								?(slaveOwned
-										?UtilText.formatAsMoney((int) (slave.getValueAsSlave(true)*Main.game.getDialogueFlags().getSlaveTrader().getBuyModifier()), "b", PresetColour.GENERIC_ARCANE)
-										:UtilText.formatAsMoney((int) (slave.getValueAsSlave(true)*Main.game.getDialogueFlags().getSlaveTrader().getSellModifier(null)), "b", PresetColour.GENERIC_ARCANE))
+										?UtilText.formatAsMoney((int) (slave.getValueAsSlave(true)*Main.game.getDialogueFlags().getSlaveTrader().getBuyModifier()), "b", PresetColour.TEXT)
+										:UtilText.formatAsMoney((int) (slave.getValueAsSlave(true)*Main.game.getDialogueFlags().getSlaveTrader().getSellModifier(null)), "b",
+												(slave.getValueAsSlave(true)*Main.game.getDialogueFlags().getSlaveTrader().getSellModifier(null))>Main.game.getPlayer().getMoney()
+													?PresetColour.GENERIC_BAD
+													:PresetColour.TEXT))
 								:UtilText.formatAsMoney(slave.getValueAsSlave(true)))+"<br/>"
 							+ "<b>"+Util.capitaliseSentence(slave.getSlaveJob(Main.game.getHourOfDay()).getName(slave))+" (now)</b><br/>"
 							+ UtilText.formatAsMoney(SlaveJob.getFinalDailyIncomeAfterModifiers(slave))+"/day"
@@ -1359,10 +1362,9 @@ public class OccupantManagementDialogue {
 				
 				if(place.getCapacity()<=Main.game.getCharactersTreatingCellAsHome(Main.game.getPlayerCell()).size()) {
 					miscDialogueSB.append("<div id='"+slave.getId()+"_TRANSFER_DISABLED_FULL' class='square-button big disabled'><div class='square-button-content'>"+SVGImages.SVG_IMAGE_PROVIDER.getSlaveTransferDisabled()+"</div></div>");
-				} else if(!place.isSlaveCell()
-						|| (slave.isDoll()
+				} else if(slave.isDoll()
 							?!place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_DOLL_CLOSET)
-							:place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_DOLL_CLOSET))) {
+							:!place.isSlaveCell() || place.getPlaceUpgrades().contains(PlaceUpgrade.LILAYA_DOLL_CLOSET)) {
 					miscDialogueSB.append("<div id='"+slave.getId()+"_TRANSFER_DISABLED_INAPPPROPRIATE' class='square-button big disabled'><div class='square-button-content'>"+SVGImages.SVG_IMAGE_PROVIDER.getSlaveTransferDisabled()+"</div></div>");
 				} else if(slave.getLocation().equals(Main.game.getPlayer().getLocation()) && slave.getWorldLocation().equals(Main.game.getPlayer().getWorldLocation())) {
 					miscDialogueSB.append("<div id='"+slave.getId()+"_TRANSFER_DISABLED_ALREADY_HERE' class='square-button big disabled'><div class='square-button-content'>"+SVGImages.SVG_IMAGE_PROVIDER.getSlaveTransferDisabled()+"</div></div>");

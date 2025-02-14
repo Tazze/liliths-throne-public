@@ -16,6 +16,7 @@ import com.lilithsthrone.game.character.attributes.CorruptionLevel;
 import com.lilithsthrone.game.character.attributes.IntelligenceLevel;
 import com.lilithsthrone.game.character.body.CoverableArea;
 import com.lilithsthrone.game.character.effects.AbstractStatusEffect;
+import com.lilithsthrone.game.character.effects.Perk;
 import com.lilithsthrone.game.character.effects.StatusEffect;
 import com.lilithsthrone.game.character.quests.QuestLine;
 import com.lilithsthrone.game.character.race.AbstractSubspecies;
@@ -80,16 +81,18 @@ public class ItemType {
 	}
 	
 	public static AbstractItemType FETISH_UNREFINED = new AbstractItemType(500,
-			"a vial of",
+			"a bottle of",
 			false,
-			"Mystery Kink",
-			"Mystery Kinks",
-			"A delicate glass bottle, filled with a viscous, glowing-pink liquid."
-					+ " From the label on one side reading 'Mystery Kink', it's quite safe to assume that this concoction carries a potent enchantment, which somehow influences the drinker's fetishes.",
+			"Succubus's Kiss",
+			"Succubus's Kisses",
+			"A heart-shaped glass bottle, filled with a swirling, glowing-pink liquid."
+					+ " The words 'Succubus's Kiss' have been etched into the bottle in an ornate script, and beneath that the words 'Fool-proof love potion' make it clear what this liquid will do.",
 			"fetishDrink",
-			PresetColour.GENERIC_SEX,
-			null,
-			null,
+			Util.newArrayListOfValues(
+					PresetColour.CLOTHING_PINK,
+					PresetColour.CLOTHING_PINK_LIGHT,
+					PresetColour.CLOTHING_WHITE,
+					PresetColour.CLOTHING_PINK_DARK),
 			Rarity.EPIC,
 			Util.newArrayListOfValues(new ItemEffect(ItemEffectType.MYSTERY_KINK)),
 			Util.newArrayListOfValues(
@@ -99,34 +102,30 @@ public class ItemType {
 					ItemTag.MISC_TF_ITEM,
 					ItemTag.SOLD_BY_RALPH,
 					ItemTag.DRINK)) {
-		@Override
-		public boolean isFetishGiving() {
-			return true;
-		}
-		
+//		@Override
+//		public boolean isFetishGiving() {
+//			return true;
+//		}
 		@Override
 		public AbstractItemEffectType getEnchantmentEffect() {
 			return ItemEffectType.FETISH_ENHANCEMENT;
 		}
-
 		@Override
 		public AbstractItemType getEnchantmentItemType(List<ItemEffect> effects) {
 			return FETISH_REFINED;
 		}
-
 		@Override
 		public String getUseName() {
 			return "drink";
 		}
-
 		@Override
 		public String getUseDescription(GameCharacter user, GameCharacter target) {
 			return getGenericUseDescription(user, target,
-					"You pull the stopper out from the top of the bottle of 'Mystery Kink', before bringing it to your lips and gulping down the thick pink liquid that's contained within.",
-					"You pull the stopper out from the top of the bottle of 'Mystery Kink', before bringing it to [npc.namePos] lips and forcing [npc.herHim] to drink down the liquid within.",
-					"[npc.Name] pulls out a bottle of 'Mystery Kink', and, after quickly pulling out the stopper, [npc.she] promptly downs the entire bottle.",
-					"[npc.Name] pulls out a bottle of 'Mystery Kink', and, after quickly pulling out the stopper,"
-							+ " [npc.she] brings it to your lips before tilting your head back and forcing you to quickly gulp down the thick pink liquid that's contained within.");
+					"You pull the stopper out from the top of the bottle of 'Succubus's Kiss', before bringing it to your [pc.lips] and gulping down the sweet pink liquid that's contained within.",
+					"You pull the stopper out from the top of the bottle of 'Succubus's Kiss', before bringing it to [npc.namePos] [npc.lips] and forcing [npc.herHim] to drink down the sweet pink liquid within.",
+					"[npc.Name] pulls out a bottle of 'Succubus's Kiss', and, after quickly pulling out the stopper, [npc.she] promptly downs the entire bottle.",
+					"[npc.Name] pulls out a bottle of 'Succubus's Kiss', and, after quickly pulling out the stopper,"
+							+ " [npc.she] brings it to your lips before tilting your head back and forcing you to quickly gulp down the sweet pink liquid that's contained within.");
 		}
 	};
 	
@@ -135,8 +134,8 @@ public class ItemType {
 			false,
 			"Fetish Endowment",
 			"Fetish Endowments",
-			"A vial of bubbling pink liquid, which was refined from a bottle of 'Mystery Kink'."
-					+ " Its potent enchantment is far more refined than that of the liquid it was distilled from, and is able to add or remove specific fetishes.",
+			"A vial of bubbling pink liquid, which was refined from a bottle of 'Succubus's Kiss'."
+					+ " Its potent enchantment is very different from the effects of the liquid that it was distilled from, and is able to add or remove specific fetishes.",
 			"fetishDrinkRefined",
 			PresetColour.FETISH,
 			null,
@@ -741,6 +740,10 @@ public class ItemType {
 		public boolean isAbleToBeUsedInSex() {
 			return true;
 		}
+//		@Override
+//		public boolean isAbleToBeUsedWhileTrading() {
+//			return false;
+//		}
 	};
 
 	public static AbstractItemType CONDOM_USED = new AbstractItemType(1,
@@ -782,6 +785,10 @@ public class ItemType {
 		public boolean isAbleToBeUsedInSex() {
 			return true;
 		}
+//		@Override
+//		public boolean isAbleToBeUsedWhileTrading() {
+//			return false;
+//		}
 	};
 	
 	public static AbstractItemType ORIENTATION_HYPNO_WATCH = new AbstractItemType(50000,
@@ -1089,11 +1096,11 @@ public class ItemType {
 			false,
 			"rejuvenation potion",
 			"rejuvenation potions",
-			"A decorative glass bottle with an ornate bronze-and-glass stopper."
-					+ " It's filled with a purple liquid, and a little informative sticker on the underside of the container informs you that it's a '<i>rejuvenating potion, guaranteed to restore and revitalise over-used orifices</i>'.",
+			"A decorative glass bottle, filled with a light blue liquid and sealed with an ornate gold-and-glass stopper."
+					+ " An informative sticker on the underside of the bottle reads: '<i>Rejuvenation potion; guaranteed to restore over-used orifices and refill all of your fluids!</i>'",
 			"rejuvenation_potion",
-			PresetColour.CLOTHING_PURPLE,
-			PresetColour.CLOTHING_BRONZE,
+			PresetColour.CLOTHING_BLUE_LIGHT,
+			PresetColour.CLOTHING_GOLD,
 			PresetColour.CLOTHING_BLUE_GREY,
 			Rarity.COMMON,
 			Util.newArrayListOfValues(new ItemEffect(ItemEffectType.REJUVENATION_POTION)),
@@ -1250,6 +1257,10 @@ public class ItemType {
 			Rarity.QUEST,
 			Util.newArrayListOfValues(new ItemEffect(ItemEffectType.DOLL_CONSOLE)),
 			Util.newArrayListOfValues()) {
+		@Override
+		public boolean isAbleToBeSold() {
+			return true;
+		}
 		@Override
 		public boolean isAbleToBeUsedInSex() {
 			return false;
@@ -3037,7 +3048,8 @@ public class ItemType {
 			}
 			
 			allItems.add(loreBook);
-
+			
+			
 			// Essences
 			if(mainSubspecies!=Subspecies.CENTAUR) { // a CENTAUR essence is identical to a HORSE_MORPH essence
 
@@ -3193,7 +3205,10 @@ public class ItemType {
 	private static AbstractItemEffectType generateBookEffect(AbstractSubspecies mainSubspecies, List<AbstractSubspecies> additionalUnlockSubspecies) {
 		return new AbstractItemEffectType(Util.newArrayListOfValues(
 				"Adds "+mainSubspecies.getName(null)+" encyclopedia entry and reveals racial status effect attributes",
-				"[style.boldExcellent(+10)] <b style='color:"+mainSubspecies.getColour(null).toWebHexString()+";'>"+mainSubspecies.getDamageMultiplier().getName()+"</b>"),
+				"[style.colourExcellent(Grants Unique Perk:)]",
+				Perk.getSubspeciesRelatedPerk(mainSubspecies).getName(null)
+				//"[style.boldExcellent(+10)] <b style='color:"+mainSubspecies.getColour(null).toWebHexString()+";'>"+mainSubspecies.getDamageMultiplier().getName()+"</b>"
+				),
 				mainSubspecies.getColour(null)) {
 			@Override
 			public String itemEffectOverride(TFModifier primaryModifier, TFModifier secondaryModifier, TFPotency potency, int limit, GameCharacter user, GameCharacter target, ItemEffectTimer timer) {

@@ -84,7 +84,7 @@ public class InventoryDialogue {
 	
 	public static List<Colour> dyePreviews;
 	public static String dyePreviewPattern;
-	public static List<Colour> dyePreviewPatterns;
+	public static List<Colour> dyePreviewPatternColours;
 	
 	public static Map<StickerCategory, Sticker> dyePreviewStickers;
 
@@ -102,8 +102,8 @@ public class InventoryDialogue {
 		
 		dyePreviewPattern = clothing.getPattern();
 
-		dyePreviewPatterns = new ArrayList<>();
-		dyePreviewPatterns.addAll(clothing.getPatternColours());
+		dyePreviewPatternColours = new ArrayList<>();
+		dyePreviewPatternColours.addAll(clothing.getPatternColours());
 		
 		dyePreviewStickers = new HashMap<>(clothing.getStickersAsObjects());
 	}
@@ -197,6 +197,20 @@ public class InventoryDialogue {
 		sb.append(" blocking you from doing so!");
 		return sb.toString();
 	}
+	
+	private static boolean isWeaponDyeReforgeActionAvailable() {
+		return Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
+				|| Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
+				|| Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+				|| Main.game.isDebugMode();
+	}
+	
+	private static boolean isClothingDyeActionAvailable() {
+		return Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
+				|| Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+				|| Main.game.isDebugMode();
+	}
+	
 	
 	/**
 	 * The main DialogueNode. From here, the player can gain access to all parts
@@ -788,7 +802,10 @@ public class InventoryDialogue {
 						return new Response("Drop all", "You can't do this during sex...", null);
 
 					} else if (index == 7 && inventoryNPC != null) {
-						if(!Main.sex.getSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), null)) {
+						if(Main.sex.getInitialSexManager().isHidden(Main.game.getPlayer())) {
+							return new Response(UtilText.parse(inventoryNPC, "Displace all ([npc.HerHim])"), UtilText.parse(inventoryNPC, "As you're hiding, you can't displace [npc.namePos] clothing!"), null);
+							
+						} else if(!Main.sex.getSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), null)) {
 							return new Response(UtilText.parse(inventoryNPC, "Displace all ([npc.HerHim])"), UtilText.parse(inventoryNPC, "You can't displace [npc.namePos] clothing in this sex scene!"), null);
 
 						} else if(inventoryNPC.getClothingCurrentlyEquipped().isEmpty()) {
@@ -821,7 +838,10 @@ public class InventoryDialogue {
 						return new Response(UtilText.parse(inventoryNPC, "Replace all ([npc.HerHim])"), "You can't replace clothing in sex!", null);
 
 					} else if (index == 9 && inventoryNPC != null) {
-						if(!Main.sex.getSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), null)) {
+						if(Main.sex.getInitialSexManager().isHidden(Main.game.getPlayer())) {
+							return new Response(UtilText.parse(inventoryNPC, "Unequip all ([npc.HerHim])"), UtilText.parse(inventoryNPC, "As you're hiding, you can't unequip [npc.namePos] clothing!"), null);
+							
+						} else if(!Main.sex.getSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), null)) {
 							return new Response(UtilText.parse(inventoryNPC, "Unequip all ([npc.HerHim])"), UtilText.parse(inventoryNPC, "You can't unequip [npc.namePos] clothing in this sex scene!"), null);
 
 						} else if(inventoryNPC.getClothingCurrentlyEquipped().isEmpty()) {
@@ -1684,7 +1704,10 @@ public class InventoryDialogue {
 								return getQuickTradeResponse();
 								
 							} else if(index == 11) {
-								if(!Main.sex.isItemUseAvailable()) {
+								if(Main.sex.getInitialSexManager().isHidden(Main.game.getPlayer())) {
+									return new Response(Util.capitaliseSentence(item.getItemType().getUseName())+" (Partner)", UtilText.parse(inventoryNPC, "As you're hiding, you can't use items on [npc.name]!"), null);
+									
+								} else if(!Main.sex.isItemUseAvailable()) {
 									return new Response(Util.capitaliseSentence(item.getItemType().getUseName())+" (Partner)", "Items cannot be used during this sex scene!", null);
 									
 								} else if (!item.isAbleToBeUsedInSex()) {
@@ -1884,6 +1907,9 @@ public class InventoryDialogue {
 								if (!item.isAbleToBeUsedFromInventory()) {
 									return new Response(Util.capitaliseSentence(item.getItemType().getUseName())+" (Self)", item.getUnableToBeUsedFromInventoryDescription(), null);
 									
+								} else if(!item.isAbleToBeUsedWhileTrading()) {
+									return new Response(Util.capitaliseSentence(item.getItemType().getUseName())+" (Self)", item.getUnableToBeUsedWhileTradingDescription(), null);
+									
 								} else if (!item.isAbleToBeUsed(Main.game.getPlayer(), Main.game.getPlayer())) {
 									return new Response(Util.capitaliseSentence(item.getItemType().getUseName()) +" (Self)", item.getUnableToBeUsedDescription(Main.game.getPlayer(), Main.game.getPlayer()), null);
 									
@@ -1913,6 +1939,9 @@ public class InventoryDialogue {
 							} else if(index == 7) {
 								if (!item.isAbleToBeUsedFromInventory()) {
 									return new Response(Util.capitaliseSentence(item.getItemType().getUseName())+" all (Self)", item.getUnableToBeUsedFromInventoryDescription(), null);
+									
+								} else if(!item.isAbleToBeUsedWhileTrading()) {
+									return new Response(Util.capitaliseSentence(item.getItemType().getUseName())+" all (Self)", item.getUnableToBeUsedWhileTradingDescription(), null);
 									
 								} else if(!item.isAbleToBeUsed(Main.game.getPlayer(), Main.game.getPlayer())) {
 									return new Response(Util.capitaliseSentence(item.getItemType().getUseName())+" all (Self)", item.getUnableToBeUsedDescription(Main.game.getPlayer(), Main.game.getPlayer()), null);
@@ -2828,9 +2857,7 @@ public class InventoryDialogue {
 								}
 								
 							} else if (index==4) {
-								if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
-										|| Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
-										|| Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+								if (isWeaponDyeReforgeActionAvailable()) {
 									boolean hasFullInventory = Main.game.getPlayer().isInventoryFull() && weapon.getRarity()!=Rarity.QUEST;
 									boolean isDyeingStackItem = Main.game.getPlayer().getAllWeaponsInInventory().get(weapon) > 1;
 									boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -3009,9 +3036,7 @@ public class InventoryDialogue {
 								};
 								
 							} else if (index==4) {
-								if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
-										|| Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
-										|| Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+								if (isWeaponDyeReforgeActionAvailable()) {
 									boolean hasFullInventory = Main.game.getPlayer().isInventoryFull() && weapon.getRarity()!=Rarity.QUEST;
 									boolean isDyeingStackItem = Main.game.getPlayer().getAllWeaponsInInventory().get(weapon) > 1;
 									boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -3232,9 +3257,7 @@ public class InventoryDialogue {
 								}
 								
 							} else if (index==4) {
-								if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
-										|| Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
-										|| Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+								if (isWeaponDyeReforgeActionAvailable()) {
 									boolean hasFullInventory = Main.game.getPlayer().isInventoryFull() && weapon.getRarity()!=Rarity.QUEST;
 									boolean isDyeingStackItem = Main.game.getPlayer().getAllWeaponsInInventory().get(weapon) > 1;
 									boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -3409,9 +3432,7 @@ public class InventoryDialogue {
 								};
 								
 							} else if (index==4) {
-								if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
-										|| Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
-										|| Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+								if (isWeaponDyeReforgeActionAvailable()) {
 									boolean hasFullInventory = Main.game.getPlayerCell().getInventory().isInventoryFull() && weapon.getRarity()!=Rarity.QUEST;
 									boolean isDyeingStackItem = Main.game.getPlayerCell().getInventory().getAllWeaponsInInventory().get(weapon) > 1;
 									boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -3563,9 +3584,7 @@ public class InventoryDialogue {
 								};
 								
 							} else if (index==4) {
-								if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
-										|| Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
-										|| Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+								if (isWeaponDyeReforgeActionAvailable()) {
 									boolean hasFullInventory = inventoryNPC.isInventoryFull() && weapon.getRarity()!=Rarity.QUEST;
 									boolean isDyeingStackItem = inventoryNPC.getAllWeaponsInInventory().get(weapon) > 1;
 									boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -3895,7 +3914,7 @@ public class InventoryDialogue {
 
 					switch(interactionType) {
 						case SEX:
-							String dropTitle = owner.getLocationPlace().isItemsDisappear()?"Drop ":"Store";
+							String dropTitle = owner.getLocationPlace().isItemsDisappear()?"Drop ":"Store ";
 							if(index == 1) {
 								return new Response(dropTitle+"(1)", "You can't drop clothing while masturbating.", null);
 								
@@ -4060,7 +4079,7 @@ public class InventoryDialogue {
 								}
 								
 							} else if (index==4) {
-								if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+								if (isClothingDyeActionAvailable()) {
 									boolean hasFullInventory = Main.game.getPlayer().isInventoryFull() && clothing.getRarity()!=Rarity.QUEST;
 									boolean isDyeingStackItem = Main.game.getPlayer().getAllClothingInInventory().get(clothing) > 1;
 									boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -4245,7 +4264,7 @@ public class InventoryDialogue {
 								};
 								
 							} else if (index==4) {
-								if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+								if (isClothingDyeActionAvailable()) {
 									boolean hasFullInventory = Main.game.getPlayer().isInventoryFull();
 									boolean isDyeingStackItem = Main.game.getPlayer().getAllClothingInInventory().get(clothing) > 1;
 									boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -4599,7 +4618,7 @@ public class InventoryDialogue {
 								}
 								
 							} else if (index==4) {
-								if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+								if (isClothingDyeActionAvailable()) {
 									boolean hasFullInventory = Main.game.getPlayer().isInventoryFull() && clothing.getRarity()!=Rarity.QUEST;
 									boolean isDyeingStackItem = Main.game.getPlayer().getAllClothingInInventory().get(clothing) > 1;
 									boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -4899,7 +4918,7 @@ public class InventoryDialogue {
 							};
 							
 						} else if (index==4) {
-							if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+							if (isClothingDyeActionAvailable()) {
 								boolean hasFullInventory = Main.game.getPlayerCell().getInventory().isInventoryFull();
 								boolean isDyeingStackItem = Main.game.getPlayerCell().getInventory().getAllClothingInInventory().get(clothing) > 1;
 								boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -5031,7 +5050,7 @@ public class InventoryDialogue {
 								};
 								
 							} else if (index==4) {
-								if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+								if (isClothingDyeActionAvailable()) {
 									boolean hasFullInventory = inventoryNPC.isInventoryFull();
 									boolean isDyeingStackItem = clothing!=null && inventoryNPC.getAllClothingInInventory().get(clothing) > 1;
 									boolean canDye = !(isDyeingStackItem && hasFullInventory);
@@ -5506,9 +5525,7 @@ public class InventoryDialogue {
 							}
 							
 						} else if (index==4) {
-							if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
-									|| Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
-									|| Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+							if (isWeaponDyeReforgeActionAvailable()) {
 								return new Response("Dye/Reforge", 
 										Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
 											?"Use your proficiency with [style.colourEarth(Earth spells)] to alter this weapon's properties."
@@ -5714,9 +5731,7 @@ public class InventoryDialogue {
 							}
 							
 						} else if (index==4) {
-							if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
-									|| Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
-									|| Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+							if (isWeaponDyeReforgeActionAvailable()) {
 								return new Response("Dye/Reforge", 
 										Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
 											?"Use your proficiency with [style.colourEarth(Earth spells)] to alter this weapon's properties."
@@ -5954,7 +5969,7 @@ public class InventoryDialogue {
 							}
 							
 						} else if (index==4) {
-							if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+							if (isClothingDyeActionAvailable()) {
 								return new Response("Dye", 
 										Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
 											?"Use your proficiency with [style.colourEarth(Earth spells)] to dye this item."
@@ -6357,7 +6372,7 @@ public class InventoryDialogue {
 							}
 							
 						} else if (index==4) {
-							if (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+							if (isClothingDyeActionAvailable()) {
 								return new Response("Dye", 
 										Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
 											?"Use your proficiency with [style.colourEarth(Earth spells)] to dye this item."
@@ -6442,7 +6457,16 @@ public class InventoryDialogue {
 						
 					case SEX:
 						if (index == 1) {
-							if(clothing.isDiscardedOnUnequip(slotEquippedTo) && !Main.sex.getSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), clothing)) {
+							if(Main.sex.getInitialSexManager().isHidden(Main.game.getPlayer())) {
+								return new Response((clothing.isDiscardedOnUnequip(slotEquippedTo)
+											?"Discard"
+												:(Main.game.getPlayer().getLocationPlace().isItemsDisappear()
+													?"Drop"
+													:"Store")),
+										UtilText.parse(inventoryNPC, "As you're hiding, you can't unequip [npc.namePos] clothing!"),
+										null);
+								
+							} else if(clothing.isDiscardedOnUnequip(slotEquippedTo) && !Main.sex.getSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), clothing)) {
 								return new Response("Discard", "You can't unequip the " + clothing.getName() + " in this sex scene!", null);
 							}
 							boolean areaFull = Main.game.isPlayerTileFull() && !Main.game.getPlayerCell().getInventory().hasClothing(clothing);
@@ -6528,7 +6552,10 @@ public class InventoryDialogue {
 							}
 							
 						} else if(index == 6 && !clothing.isDiscardedOnUnequip(slotEquippedTo)) {
-							if(!Main.sex.getSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), clothing)) {
+							if(Main.sex.getInitialSexManager().isHidden(Main.game.getPlayer())) {
+								return new Response("Unequip", UtilText.parse(inventoryNPC, "As you're hiding, you can't unequip [npc.namePos] clothing!"), null);
+								
+							} else if(!Main.sex.getSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), clothing)) {
 								return new Response("Unequip", "You can't unequip the " + clothing.getName() + " in this sex scene!", null);
 							}
 							
@@ -6559,11 +6586,16 @@ public class InventoryDialogue {
 												+ clothing.getBlockedPartsKeysAsListWithoutNONE(inventoryNPC, clothing.getSlotEquippedTo()).get(index -11).getDescriptionPast() + "!", null);
 								
 							} else {
+								if(Main.sex.getInitialSexManager().isHidden(Main.game.getPlayer())) {
+									return new Response(Util.capitaliseSentence(clothing.getBlockedPartsKeysAsListWithoutNONE(inventoryNPC, clothing.getSlotEquippedTo()).get(index - 11).getDescription()),
+											UtilText.parse(inventoryNPC,
+													"As you're hiding, you can't "+clothing.getBlockedPartsKeysAsListWithoutNONE(inventoryNPC, clothing.getSlotEquippedTo()).get(index -11).getDescription() + " [npc.namePos] " + clothing.getName() + "!"),
+											null);
+								}
 								if(owner.isAbleToBeDisplaced(clothing, clothing.getBlockedPartsKeysAsListWithoutNONE(inventoryNPC, clothing.getSlotEquippedTo()).get(index -11), false, false, Main.game.getPlayer())){
-									
 									if(!Main.sex.getSexManager().isAbleToRemoveOthersClothing(Main.game.getPlayer(), clothing)) {
 										return new Response(Util.capitaliseSentence(clothing.getBlockedPartsKeysAsListWithoutNONE(inventoryNPC, clothing.getSlotEquippedTo()).get(index - 11).getDescription()),
-												"You "+clothing.getBlockedPartsKeysAsListWithoutNONE(inventoryNPC, clothing.getSlotEquippedTo()).get(index -11).getDescription() + " the " + clothing.getName() + " in this sex scene!", null);
+												"You can't "+clothing.getBlockedPartsKeysAsListWithoutNONE(inventoryNPC, clothing.getSlotEquippedTo()).get(index -11).getDescription() + " the " + clothing.getName() + " in this sex scene!", null);
 									}
 									
 									return new Response(Util.capitaliseSentence(clothing.getBlockedPartsKeysAsListWithoutNONE(inventoryNPC, clothing.getSlotEquippedTo()).get(index - 11).getDescription()),
@@ -6673,14 +6705,14 @@ public class InventoryDialogue {
 							+ clothing.getClothingType().getSVGImage(slotEquippedTo,
 									dyePreviews,
 									dyePreviewPattern,
-									dyePreviewPatterns,
+									dyePreviewPatternColours,
 									getDyePreviewStickersAsStrings())
 						+ "</div>"
 					+ "</div>");
 		
 		inventorySB.append("<h3 style='text-align:center;'><b>Dye & Preview</b></h3>");
 		
-		if(!clothing.getClothingType().getStickers().isEmpty()) { //TODO test stickers
+		if(!clothing.getClothingType().getStickers().isEmpty()) {
 			StringBuilder stickerSB = new StringBuilder();
 			boolean stickerFound = false;
 			List<StickerCategory> orderedCategories = new ArrayList<>(clothing.getClothingType().getStickers().keySet());
@@ -6738,20 +6770,22 @@ public class InventoryDialogue {
 							+ Util.capitaliseSentence(Util.intToPrimarySequence(i+1))+" Colour"+(cr.isRecolouringAllowed()?"":" ([style.italicsBad(cannot be changed)])")+":<br/>");
 				
 				for(Colour c : cr.getAllColours()) {
-					inventorySB.append("<div class='normal-button"+(dyePreviews.size()>i && dyePreviews.get(i)==c?" selected":"")+"' id='DYE_CLOTHING_"+i+"_"+c.getId()+"'"
-										+ " style='width:auto; margin-right:4px; border-width:1px;"
-											+(cr.getDefaultColours().contains(c)
-												?"border-color:"+PresetColour.TEXT_GREY.toWebHexString()+";"
-												:"")
-											+(dyePreviews.size()>i && dyePreviews.get(i)==c
-												?" background-color:"+PresetColour.BASE_GREEN.getShades()[4]+";"
-												:"")+"'>"
-									+ "<div class='phone-item-colour' style='"
-										+ (c.isMetallic()
-												?"background: repeating-linear-gradient(135deg, " + c.toWebHexString() + ", " + c.getShades()[4] + " 10px);"
-												:"background-color:" + c.toWebHexString() + ";")
-										+ "'></div>"
-						+ "</div>");
+//					if(!c.isDesaturated()) {
+						inventorySB.append("<div class='normal-button"+(dyePreviews.size()>i && dyePreviews.get(i)==c?" selected":"")+"' id='DYE_CLOTHING_"+i+"_"+c.getId()+"'"
+											+ " style='width:auto; margin-right:4px; border-width:1px;"
+												+(cr.getDefaultColours().contains(c)
+													?"border-color:"+PresetColour.TEXT_GREY.toWebHexString()+";"
+													:"")
+												+(dyePreviews.size()>i && dyePreviews.get(i)==c
+													?" background-color:"+PresetColour.BASE_GREEN.getShades()[4]+";"
+													:"")+"'>"
+										+ "<div class='phone-item-colour' style='"
+											+ (c.isMetallic()
+													?"background: repeating-linear-gradient(135deg, " + c.toWebHexString() + ", " + c.getShades()[4] + " 10px);"
+													:"background-color:" + c.toWebHexString() + ";")
+											+ "'></div>"
+							+ "</div>");
+//					}
 				}
 				inventorySB.append("</div>");
 			}
@@ -6785,8 +6819,8 @@ public class InventoryDialogue {
 								+ "Pattern "+Util.capitaliseSentence(Util.intToPrimarySequence(i+1))+" Colour:<br/>");
 					
 					for (Colour c : cr.getAllColours()) {
-						inventorySB.append("<div class='normal-button"+(dyePreviewPatterns.size()>i && dyePreviewPatterns.get(i)==c?" selected":"")+"' id='DYE_CLOTHING_PATTERN_"+i+"_"+c.getId()+"'"
-											+ " style='width:auto; margin-right:4px;"+(dyePreviewPatterns.size()>i && dyePreviewPatterns.get(i)==c?" background-color:"+PresetColour.BASE_GREEN.getShades()[4]+";":"")+"'>"
+						inventorySB.append("<div class='normal-button"+(dyePreviewPatternColours.size()>i && dyePreviewPatternColours.get(i)==c?" selected":"")+"' id='DYE_CLOTHING_PATTERN_"+i+"_"+c.getId()+"'"
+											+ " style='width:auto; margin-right:4px;"+(dyePreviewPatternColours.size()>i && dyePreviewPatternColours.get(i)==c?" background-color:"+PresetColour.BASE_GREEN.getShades()[4]+";":"")+"'>"
 										+ "<div class='phone-item-colour' style='"
 											+ (c.isMetallic()
 													?"background: repeating-linear-gradient(135deg, " + c.toWebHexString() + ", " + c.getShades()[4] + " 10px);"
@@ -6905,7 +6939,7 @@ public class InventoryDialogue {
 			} else if (index == 1) {
 				if(dyePreviews.equals(clothing.getColours())
 						&& dyePreviewPattern.equals(clothing.getPattern())
-						&& dyePreviewPatterns.equals(clothing.getPatternColours())
+						&& dyePreviewPatternColours.equals(clothing.getPatternColours())
 						&& dyePreviewStickers.equals(clothing.getStickersAsObjects())) {
 					return new Response("Dye",
 							"You need to choose different colours before being able to dye the " + clothing.getName() + "!",
@@ -6920,7 +6954,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU) {
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), owner, false);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -6930,7 +6964,7 @@ public class InventoryDialogue {
 										+ "<b>The " + clothing.getName() + " " + (clothing.getClothingType().isPlural() ? "have been" : "has been") + " dyed</b>!"
 									+ "</p>"
 									+ "<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -6948,7 +6982,7 @@ public class InventoryDialogue {
 							AbstractClothing dyedClothing = new AbstractClothing(clothing) {};
 							dyedClothing.setColours(dyePreviews);
 							dyedClothing.setPattern(dyePreviewPattern);
-							dyedClothing.setPatternColours(dyePreviewPatterns);
+							dyedClothing.setPatternColours(dyePreviewPatternColours);
 							dyedClothing.setStickersAsObjects(dyePreviewStickers);
 							owner.addClothing(dyedClothing, false);
 							Main.game.addEvent(new EventLogEntry("Dyed", dyedClothing.getDisplayName(true)), false);
@@ -6958,7 +6992,7 @@ public class InventoryDialogue {
 							AbstractClothing dyedClothing = new AbstractClothing(clothing) {};
 							dyedClothing.setColours(dyePreviews);
 							dyedClothing.setPattern(dyePreviewPattern);
-							dyedClothing.setPatternColours(dyePreviewPatterns);
+							dyedClothing.setPatternColours(dyePreviewPatternColours);
 							dyedClothing.setStickersAsObjects(dyePreviewStickers);
 							Main.game.getPlayerCell().getInventory().addClothing(dyedClothing);
 							Main.game.addEvent(new EventLogEntry("Dyed", dyedClothing.getDisplayName(true)), false);
@@ -6970,7 +7004,7 @@ public class InventoryDialogue {
 			} else if (index == 6) {
 				if(dyePreviews.equals(clothing.getColours())
 						&& dyePreviewPattern.equals(clothing.getPattern())
-						&& dyePreviewPatterns.equals(clothing.getPatternColours())
+						&& dyePreviewPatternColours.equals(clothing.getPatternColours())
 						&& dyePreviewStickers.equals(clothing.getStickersAsObjects())) {
 					return new Response("Dye all (stack)",
 							"You need to choose different colours before being able to dye the " + clothing.getName() + "!",
@@ -6992,7 +7026,7 @@ public class InventoryDialogue {
 							null); 
 				}
 				
-				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 					int dyeBrushCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH));
 					
 					if(dyeBrushCount<stackCount) {
@@ -7010,7 +7044,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU) {
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().removeItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), finalCount);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -7023,7 +7057,7 @@ public class InventoryDialogue {
 							Main.game.getTextEndStringBuilder().append("<p>You then repeat this for the other "+Util.intToString(finalCount-1)+" "+clothing.getNamePlural()+"...</p>");
 							
 							Main.game.getTextEndStringBuilder().append("<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -7045,7 +7079,7 @@ public class InventoryDialogue {
 							AbstractClothing dyedClothing = new AbstractClothing(clothing) {};
 							dyedClothing.setColours(dyePreviews);
 							dyedClothing.setPattern(dyePreviewPattern);
-							dyedClothing.setPatternColours(dyePreviewPatterns);
+							dyedClothing.setPatternColours(dyePreviewPatternColours);
 							dyedClothing.setStickersAsObjects(dyePreviewStickers);
 							owner.addClothing(dyedClothing, finalCount, false, false);
 							Main.game.addEvent(new EventLogEntry("Dyed", dyedClothing.getDisplayName(true)), false);
@@ -7055,7 +7089,7 @@ public class InventoryDialogue {
 							AbstractClothing dyedClothing = new AbstractClothing(clothing) {};
 							dyedClothing.setColours(dyePreviews);
 							dyedClothing.setPattern(dyePreviewPattern);
-							dyedClothing.setPatternColours(dyePreviewPatterns);
+							dyedClothing.setPatternColours(dyePreviewPatternColours);
 							dyedClothing.setStickersAsObjects(dyePreviewStickers);
 							Main.game.getPlayerCell().getInventory().addClothing(dyedClothing, finalCount);
 							Main.game.addEvent(new EventLogEntry("Dyed", dyedClothing.getDisplayName(true)), false);
@@ -7066,7 +7100,7 @@ public class InventoryDialogue {
 			} else if (index == 11) {
 				if(dyePreviews.equals(clothing.getColours())
 						&& dyePreviewPattern.equals(clothing.getPattern())
-						&& dyePreviewPatterns.equals(clothing.getPatternColours())
+						&& dyePreviewPatternColours.equals(clothing.getPatternColours())
 						&& dyePreviewStickers.equals(clothing.getStickersAsObjects())) {
 					return new Response("Dye all",
 							"You need to choose different colours before being able to dye the " + clothing.getName() + "!",
@@ -7099,7 +7133,7 @@ public class InventoryDialogue {
 							null); 
 				}
 				
-				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 					int dyeBrushCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH));
 					
 					if(dyeBrushCount<stackCount) {
@@ -7117,7 +7151,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU) {
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().removeItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), finalCount);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -7130,7 +7164,7 @@ public class InventoryDialogue {
 							Main.game.getTextEndStringBuilder().append("<p>You then repeat this for the other "+Util.intToString(finalCount-1)+" "+clothing.getNamePlural()+"...</p>");
 							
 							Main.game.getTextEndStringBuilder().append("<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -7154,7 +7188,7 @@ public class InventoryDialogue {
 								AbstractClothing dyedClothing = new AbstractClothing(c) {};
 								dyedClothing.setColours(dyePreviews);
 								dyedClothing.setPattern(dyePreviewPattern);
-								dyedClothing.setPatternColours(dyePreviewPatterns);
+								dyedClothing.setPatternColours(dyePreviewPatternColours);
 								dyedClothing.setStickersAsObjects(dyePreviewStickers);
 								owner.addClothing(dyedClothing, clothingCount, false, false);
 								Main.game.addEvent(new EventLogEntry("Dyed", dyedClothing.getDisplayName(true)), false);
@@ -7167,7 +7201,7 @@ public class InventoryDialogue {
 								AbstractClothing dyedClothing = new AbstractClothing(c) {};
 								dyedClothing.setColours(dyePreviews);
 								dyedClothing.setPattern(dyePreviewPattern);
-								dyedClothing.setPatternColours(dyePreviewPatterns);
+								dyedClothing.setPatternColours(dyePreviewPatternColours);
 								dyedClothing.setStickersAsObjects(dyePreviewStickers);
 								Main.game.getPlayerCell().getInventory().addClothing(dyedClothing, clothingCount);
 								Main.game.addEvent(new EventLogEntry("Dyed", dyedClothing.getDisplayName(true)), false);
@@ -7202,7 +7236,7 @@ public class InventoryDialogue {
 			} else if (index == 1) {
 				if(dyePreviews.equals(clothing.getColours())
 						&& dyePreviewPattern.equals(clothing.getPattern())
-						&& dyePreviewPatterns.equals(clothing.getPatternColours())
+						&& dyePreviewPatternColours.equals(clothing.getPatternColours())
 						&& dyePreviewStickers.equals(clothing.getStickersAsObjects())) {
 					return new Response("Dye",
 							"You need to choose different colours before being able to dye the " + clothing.getName() + "!",
@@ -7217,7 +7251,7 @@ public class InventoryDialogue {
 								INVENTORY_MENU){
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), owner, false);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -7227,7 +7261,7 @@ public class InventoryDialogue {
 										+ "<b>The " + clothing.getName() + " " + (clothing.getClothingType().isPlural() ? "have been" : "has been") + " dyed</b>!"
 									+ "</p>"
 									+ "<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -7242,7 +7276,7 @@ public class InventoryDialogue {
 						
 						clothing.setColours(dyePreviews);
 						clothing.setPattern(dyePreviewPattern);
-						clothing.setPatternColours(dyePreviewPatterns);
+						clothing.setPatternColours(dyePreviewPatternColours);
 						clothing.setStickersAsObjects(dyePreviewStickers);
 						
 						Main.game.addEvent(new EventLogEntry("Dyed", clothing.getDisplayName(true)), false);
@@ -7275,7 +7309,7 @@ public class InventoryDialogue {
 			} else if (index == 1) {
 				if(dyePreviews.equals(clothing.getColours())
 						&& dyePreviewPattern.equals(clothing.getPattern())
-						&& dyePreviewPatterns.equals(clothing.getPatternColours())
+						&& dyePreviewPatternColours.equals(clothing.getPatternColours())
 						&& dyePreviewStickers.equals(clothing.getStickersAsObjects())) {
 					return new Response("Dye",
 							"You need to choose different colours before being able to dye the " + clothing.getName() + "!",
@@ -7291,7 +7325,7 @@ public class InventoryDialogue {
 						AbstractClothing dyedClothing = new AbstractClothing(clothing) {};
 						dyedClothing.setColours(dyePreviews);
 						dyedClothing.setPattern(dyePreviewPattern);
-						dyedClothing.setPatternColours(dyePreviewPatterns);
+						dyedClothing.setPatternColours(dyePreviewPatternColours);
 						dyedClothing.setStickersAsObjects(dyePreviewStickers);
 						clothing = dyedClothing;
 						Main.game.getPlayerCell().getInventory().addClothing(dyedClothing);
@@ -7323,7 +7357,7 @@ public class InventoryDialogue {
 			} else if (index  == 1) {
 				if(dyePreviews.equals(clothing.getColours())
 						&& dyePreviewPattern.equals(clothing.getPattern())
-						&& dyePreviewPatterns.equals(clothing.getPatternColours())
+						&& dyePreviewPatternColours.equals(clothing.getPatternColours())
 						&& dyePreviewStickers.equals(clothing.getStickersAsObjects())) {
 					return new Response("Dye",
 							"You need to choose different colours before being able to dye the " + clothing.getName() + "!",
@@ -7337,7 +7371,7 @@ public class InventoryDialogue {
 					public void effects(){
 						clothing.setColours(dyePreviews);
 						clothing.setPattern(dyePreviewPattern);
-						clothing.setPatternColours(dyePreviewPatterns);
+						clothing.setPatternColours(dyePreviewPatternColours);
 						clothing.setStickersAsObjects(dyePreviewStickers);
 					}
 				};
@@ -7366,7 +7400,8 @@ public class InventoryDialogue {
 
 			} else if (index == 1) {
 				if (!Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
-						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+						&& !Main.game.isDebugMode()) {
 					return new Response("Dye",
 							"You do not have a dye-brush, so cannot change the colours of the " + weapon.getName() + "...",
 							null); 
@@ -7386,7 +7421,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU){
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), owner, false);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -7396,7 +7431,7 @@ public class InventoryDialogue {
 										+ "<b>The " + weapon.getName() + " " + (weapon.getWeaponType().isPlural() ? "have been" : "has been") + " dyed</b>!"
 									+ "</p>"
 									+ "<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -7430,7 +7465,8 @@ public class InventoryDialogue {
 
 			} else if (index == 2) {
 				if (!Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
-						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+						&& !Main.game.isDebugMode()) {
 					return new Response("Reforge",
 							"You do not have a reforging hammer, so cannot change the damage type of the " + weapon.getName() + "...",
 							null); 
@@ -7450,7 +7486,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU){
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER), owner, false);
 							
 							Main.game.getTextEndStringBuilder().append(
@@ -7495,7 +7531,8 @@ public class InventoryDialogue {
 
 			} else if (index == 3) {
 				if ((!Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER) || !Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH))
-						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+						&& !Main.game.isDebugMode()) {
 					return new Response("Dye & reforge",
 							"You do not have both a dye brush and a reforging hammer, so cannot dye and reforge the " + weapon.getName() + "...",
 							null); 
@@ -7521,7 +7558,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU){
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), owner, false);
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER), owner, false);
 							Main.game.getTextEndStringBuilder().append(
@@ -7535,7 +7572,7 @@ public class InventoryDialogue {
 										+ "<b>The " + weapon.getName() + " " + (weapon.getWeaponType().isPlural() ? "have been" : "has been") + " dyed and reforged</b>!"
 									+ "</p>"
 									+ "<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -7596,7 +7633,7 @@ public class InventoryDialogue {
 							null); 
 				}
 				
-				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 					int dyeBrushCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH));
 					
 					if(dyeBrushCount<stackCount) {
@@ -7614,7 +7651,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU) {
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().removeItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), finalCount);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -7627,7 +7664,7 @@ public class InventoryDialogue {
 							Main.game.getTextEndStringBuilder().append("<p>You then repeat this for the other "+Util.intToString(finalCount-1)+" "+weapon.getNamePlural()+"...</p>");
 							
 							Main.game.getTextEndStringBuilder().append("<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -7683,7 +7720,7 @@ public class InventoryDialogue {
 							null); 
 				}
 				
-				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 					int reforgeHammerCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER));
 					
 					if(reforgeHammerCount<stackCount) {
@@ -7701,7 +7738,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU) {
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().removeItem(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER), finalCount);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -7779,7 +7816,7 @@ public class InventoryDialogue {
 							null); 
 				}
 				
-				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 					int dyeBrushCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH));
 					int reforgeHammerCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER));
 					
@@ -7798,7 +7835,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU) {
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().removeItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), finalCount);
 							Main.game.getPlayer().removeItem(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER), finalCount);
 							Main.game.getTextEndStringBuilder().append(
@@ -7893,7 +7930,7 @@ public class InventoryDialogue {
 							null); 
 				}
 				
-				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 					int dyeBrushCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH));
 					
 					if(dyeBrushCount<stackCount) {
@@ -7911,7 +7948,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU) {
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().removeItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), finalCount);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -7924,7 +7961,7 @@ public class InventoryDialogue {
 							Main.game.getTextEndStringBuilder().append("<p>You then repeat this for the other "+Util.intToString(finalCount-1)+" "+weapon.getNamePlural()+"...</p>");
 							
 							Main.game.getTextEndStringBuilder().append("<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -7998,7 +8035,7 @@ public class InventoryDialogue {
 							null); 
 				}
 				
-				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 					int reforgeHammerCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER));
 					
 					if(reforgeHammerCount<stackCount) {
@@ -8016,7 +8053,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU) {
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().removeItem(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER), finalCount);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -8110,7 +8147,7 @@ public class InventoryDialogue {
 							null); 
 				}
 				
-				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+				if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 					int dyeBrushCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH));
 					int reforgeHammerCount = Main.game.getPlayer().getItemCount(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER));
 					
@@ -8129,7 +8166,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU) {
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().removeItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), finalCount);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -8221,7 +8258,8 @@ public class InventoryDialogue {
 
 			} else if (index == 1) {
 				if (!Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH)
-						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+						&& !Main.game.isDebugMode()) {
 					return new Response("Dye",
 							"You do not have a dye-brush, so cannot change the colours of the " + weapon.getName() + "...",
 							null); 
@@ -8241,7 +8279,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU){
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), owner, false);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -8251,7 +8289,7 @@ public class InventoryDialogue {
 										+ "<b>The " + weapon.getName() + " " + (weapon.getWeaponType().isPlural() ? "have been" : "has been") + " dyed</b>!"
 									+ "</p>"
 									+ "<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -8289,7 +8327,8 @@ public class InventoryDialogue {
 
 			} else if (index == 2) {
 				if (!Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER)
-						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+						&& !Main.game.isDebugMode()) {
 					return new Response("Reforge",
 							"You do not have a reforging hammer, so cannot change the damage type of the " + weapon.getName() + "...",
 							null); 
@@ -8309,7 +8348,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU){
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER), owner, false);
 							Main.game.getTextEndStringBuilder().append(
 									"<p style='text-align:center;'>"
@@ -8353,7 +8392,8 @@ public class InventoryDialogue {
 
 			} else if (index == 3) {
 				if ((!Main.game.getPlayer().hasItemType(ItemType.REFORGE_HAMMER) || !Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH))
-						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						&& !Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+						&& !Main.game.isDebugMode()) {
 					return new Response("Dye & reforge",
 							"You do not have both a dye brush and a reforging hammer, so cannot dye and reforge the " + weapon.getName() + "...",
 							null); 
@@ -8379,7 +8419,7 @@ public class InventoryDialogue {
 						INVENTORY_MENU){
 					@Override
 					public void effects(){
-						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)) {
+						if(!Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH) && !Main.game.isDebugMode()) {
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH), owner, false);
 							Main.game.getPlayer().useItem(Main.game.getItemGen().generateItem(ItemType.REFORGE_HAMMER), owner, false);
 							Main.game.getTextEndStringBuilder().append(
@@ -8393,7 +8433,7 @@ public class InventoryDialogue {
 										+ "<b>The " + weapon.getName() + " " + (weapon.getWeaponType().isPlural() ? "have been" : "has been") + " reforged</b>!"
 									+ "</p>"
 									+ "<p>"
-										+ (Main.game.getPlayer().hasItemType(ItemType.DYE_BRUSH) || Main.game.getPlayer().isSpellSchoolSpecialAbilityUnlocked(SpellSchool.EARTH)
+										+ (isClothingDyeActionAvailable()
 												?"You have <b>" + Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH))
 														+ "</b> dye-brush" + (Main.game.getPlayer().getAllItemsInInventory().get(Main.game.getItemGen().generateItem(ItemType.DYE_BRUSH)) == 1 ? "" : "es") + " left!"
 												:"You have <b>0</b> dye-brushes left!")
@@ -8548,8 +8588,9 @@ public class InventoryDialogue {
 		}
 	}
 	
-	private static Response getQuickTradeResponse() { //TODO move this into options
-		
+	private static Response getQuickTradeResponse() {
+		//TODO move this into options
+		// Also, instead of being a response, this needs to be a button within the inventory UI
 		return null;
 		
 //		if (Main.game.getDialogueFlags().quickTrade) {
@@ -8596,12 +8637,18 @@ public class InventoryDialogue {
 					null);
 		}
 
-		if(interactionType==InventoryInteraction.SEX && !Main.sex.getInitialSexManager().isAbleToRemoveClothingSeals(Main.game.getPlayer())) {
-			return new Response("Unseal"+(ownsKey?"(Use key)":"(<i>"+removalCost+" Essences</i>)"),
-					"You can't unseal clothing in this sex scene!",
-					null);
+		if(interactionType==InventoryInteraction.SEX) {
+			if(!selfUnseal && Main.sex.getInitialSexManager().isHidden(Main.game.getPlayer())) {
+				return new Response("Unseal"+(ownsKey?"(Use key)":"(<i>"+removalCost+" Essences</i>)"),
+						UtilText.parse(owner, "As you're hiding, you can't unseal [npc.namePos] clothing!"),
+						null);
+			}
+			if(!Main.sex.getInitialSexManager().isAbleToRemoveClothingSeals(Main.game.getPlayer())) {
+				return new Response("Unseal"+(ownsKey?"(Use key)":"(<i>"+removalCost+" Essences</i>)"),
+						"You can't unseal clothing in this sex scene!",
+						null);
+			}
 		}
-		
 		
 		if(!ownsKey) {
 			if(!Main.game.getPlayer().isQuestCompleted(QuestLine.SIDE_ENCHANTMENT_DISCOVERY)) {
@@ -8625,7 +8672,10 @@ public class InventoryDialogue {
 			return new Response("Unseal "+(ownsKey?"([style.italicsGood(Use key)])":"([style.italicsArcane("+removalCost+" Essences)])"),
 						ownsKey
 							?"As you own the key which unlocks this piece of clothing, you can remove it without having to spend any arcane essences!"
-							:"Spend "+removalCost+" arcane essences on unsealing from this piece of clothing.",
+							:("Spend "+removalCost+" arcane essences on unsealing this piece of clothing."
+								+ (Main.game.getPlayer().hasFetish(Fetish.FETISH_BONDAGE_VICTIM) && selfUnseal
+									?"<br/>[style.italicsMinorBad(You have to pay 5 times the standard unseal cost due to your '"+Fetish.FETISH_BONDAGE_VICTIM.getName(Main.game.getPlayer())+"' fetish!)]"
+									:"")),
 						interactionType==InventoryInteraction.SEX
 							?Main.sex.SEX_DIALOGUE
 							:INVENTORY_MENU) {
