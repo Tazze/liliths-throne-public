@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
@@ -1282,8 +1283,15 @@ public class MainController implements Initializable {
 	}
 	
 	static void addEventListener(Document document, String ID, String type, EventListener listener, boolean useCapture) {
-		((EventTarget) document.getElementById(ID)).addEventListener(type, listener, useCapture);
-		EventListenerDataMap.get(document).add(new EventListenerData(ID, type, listener, useCapture));
+		// WebView can retain a stale native wrapper when an EventListener instance is reused after reload.
+		EventListener registeredListener = new EventListener() {
+			@Override
+			public void handleEvent(Event event) {
+				listener.handleEvent(event);
+			}
+		};
+		((EventTarget) document.getElementById(ID)).addEventListener(type, registeredListener, useCapture);
+		EventListenerDataMap.get(document).add(new EventListenerData(ID, type, registeredListener, useCapture));
 	}
 	
 	public static void addTooltipListeners(String id, EventListener tooltip) {
